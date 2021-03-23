@@ -208,7 +208,7 @@ calc_p_value_safer <- function(df, vTy, nu_norm, sig, mu = 0, two_sided = TRUE) 
       
     }
   }
-  if(is.nan(exp(n1 - d1)){
+  if(is.nan(exp(n1 - d1))){
     p = 0
   }else{
     p = exp(n1 - d1)

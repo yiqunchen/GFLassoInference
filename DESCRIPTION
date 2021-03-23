@@ -5,7 +5,6 @@ Maintainer: Yiqun Chen <yiqunc@uw.edu>
 Author: Yiqun Chen
 Authors@R: c(person("Yiqun", "Chen", email = "yiqunc@uw.edu",
                   role = c("aut", "cre")))
-
 Description: An implementation of powerful selective inference for graph fused lasso as described in Chen et al. (2021)
 License: GPL-3
 Depends: R (>= 3.5)
