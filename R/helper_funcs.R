@@ -23,7 +23,7 @@ sparse_svdsolve <- function(A,b, rtol=1e-7) {
 }
 
 
-
+#' @export
 dual1d_Dmat = function(m){
   D = matrix(0, nrow = m-1, ncol = m)
   for(ii in 1:(m-1)){
@@ -35,18 +35,19 @@ dual1d_Dmat = function(m){
 
 
 # Makes a D matrix for a matrix that is stacked as rows
+#' @export
 graph2D_Dmat = function(m){
-  
+
   m0 = sqrt(m)
   stopifnot( m0 == round(m0) )
   D = matrix(0, nrow = 2*(m0-1)*m0, ncol = m)
-  
+
   # connect all within chunks
   for(jj in 1:m0){
     chunk = 1:m0 + (jj-1)*m0
     D[(m0-1)*(jj-1) + 1:(m0-1), chunk] = dual1d_Dmat(m0)
   }
-  sofar = m0*(m0-1) 
+  sofar = m0*(m0-1)
   # connect between all adjacent chunks
   for(jj in 1:(m-m0)){
     newrow = rep(0,m)
@@ -57,11 +58,12 @@ graph2D_Dmat = function(m){
   return(D)
 }
 
-# takes in adjacency matrix (either produced from igraph, 
-#                            or a matrix with zero entries 
+# takes in adjacency matrix (either produced from igraph,
+#                            or a matrix with zero entries
 #                            in non-adjacent edges and 1 in adjacent edges)
 # and produces a (sparse) D matrix for usage in the generalized lasso
 ##' @import Matrix
+##' @export
 getDmat.from.adjmat = function(adjmat, sparseMatrix=FALSE){
   n = ncol(adjmat)
   if(sparseMatrix){
@@ -106,10 +108,10 @@ convert_cc_to_list <- function(cc_vec){
 # Function to take in an action object  ex) f0 = dualpathSvd2(..); action.obj = f0$action;
 # and returns a _list_ of the states after each step in algorithm, starting with NA as the first state.
 get.states = function(action.obj){
-  
+
   # Obtain a list of actions at each step.
   actionlists = sapply(1:length(action.obj),function(ii) action.obj[1:ii] )
-  
+
   # Helper function to extract the final state after running through (a list of) actions
   get.final.state = function(actionlist){
     if(length(actionlist)==1) return(actionlist)
@@ -132,7 +134,7 @@ get.states = function(action.obj){
   }
   states = lapply(actionlists, get.final.state)
   states = c(NA,states)
-  
+
   return(states)
 }
 
@@ -152,14 +154,14 @@ Seq = function(a,b,by) {
 }
 
 check_segment_in_model <- function(old_segment, new_cluster){
-  #### This model takes in 
+  #### This model takes in
   #### 1. new cluster assignment
-  #### 2. a list segment (represented by the positions of the nodes) 
-  #### we are interested in the old cluster 
-  #### and checks if the list of segments of interest is in the 
+  #### 2. a list segment (represented by the positions of the nodes)
+  #### we are interested in the old cluster
+  #### and checks if the list of segments of interest is in the
   #### new graph (assume same ordering of nodes)
   old_segment_length <- length(old_segment)
-  
+
   for (i in c(1:old_segment_length)){
     curr_seg <- old_segment[[i]]
     curr_elem <- curr_seg[1]
@@ -177,12 +179,13 @@ check_segment_in_model <- function(old_segment, new_cluster){
   return(TRUE)
 }
 
+#' @export
 getadjmat.from.Dmat = function(Dmat){
-  
+
   Dmat = rbind(Dmat)
   n = ncol(Dmat)
   adjmat = matrix(0,n,n)
-  
+
   for(jj in 1:nrow(Dmat)){
     inds = which(Dmat[jj,]!=0)
     adjmat[inds[1],inds[2]] = 1
@@ -203,8 +206,8 @@ GetGamma_k = function(obj, condition.step){
 }
 
 GetBeta_k = function(obj, condition.step){
-  ### get the estimated beta(mean in the denoising case) 
-  ### at step k 
+  ### get the estimated beta(mean in the denoising case)
+  ### at step k
   ### obj: output from dualpathSvd2()
   ### condition.step: k
   if(length(obj$action) < condition.step){
@@ -215,7 +218,7 @@ GetBeta_k = function(obj, condition.step){
 }
 
 GetGraph_k = function(obj, condition.step, Dmat){
-  ### get the estimated graph at step k 
+  ### get the estimated graph at step k
   ### obj: output from dualpathSvd2()
   ### condition.step: k
   ### Dmat: the graph incidence (penalty) matrix
@@ -229,10 +232,10 @@ GetGraph_k = function(obj, condition.step, Dmat){
 }
 
 test.cc.equality <- function(g1, g2){
-  ### compares if two connected components 
+  ### compares if two connected components
   ### are the same - assume common indices
   ### Input: igraph object g1 and g2
-  ### Output: logical vector 
+  ### Output: logical vector
   cc_g1 <- components(g1)
   cc_g2 <- components(g2)
   # number of cc has to be equal
@@ -273,7 +276,7 @@ polyhedron.checks.out = function(y0, G, u=ifelse(is.null(nrow(G)), 0,rep(0,nrow(
   }
 }
 
-PolyInt <- function(y, G, v, sigma, u=ifelse(is.null(nrow(G)), 0,rep(0,nrow(G))), 
+PolyInt <- function(y, G, v, sigma, u=ifelse(is.null(nrow(G)), 0,rep(0,nrow(G))),
                     tol = 1e-6, bits=NULL){
   ### Compute the interval [vlo, vup] defined by y:Gy<=0
   ### [vlow, vup] = v^ty|Gy<=u
@@ -283,7 +286,7 @@ PolyInt <- function(y, G, v, sigma, u=ifelse(is.null(nrow(G)), 0,rep(0,nrow(G)))
   ### Output: an ordered tuple [vlow, vup]
   z = sum(v*y)
   # 2 norm square
-  vv = sum(v^2) 
+  vv = sum(v^2)
   sd = sigma*sqrt(vv)
   if(is.null(nrow(G))){
     return(list(vlo=-Inf,vup=+Inf,sd=sd,z=z))
@@ -300,11 +303,11 @@ PolyInt <- function(y, G, v, sigma, u=ifelse(is.null(nrow(G)), 0,rep(0,nrow(G)))
   return(list(vlo=vlo,vup=vup,sd=sd,z=z))
 }
 
-PolyInt_G_free <- function(y, v, Gy, Gv, sigma, 
+PolyInt_G_free <- function(y, v, Gy, Gv, sigma,
                            tol = 1e-6, gy_tol = 1e-9, bits=NULL){
   ### compute the same values as polyint but instead pre-input Gy and Gv instead!
   ### if we can computr Gy and Gv efficiently
-  
+
   ### Compute the interval [vlo, vup] defined by y:Gy<=0
   ### [vlow, vup] = v^ty|Gy<=u
   ### Input: y (observed data), G (Gamma matrix), u (0 vector)
@@ -312,16 +315,16 @@ PolyInt_G_free <- function(y, v, Gy, Gv, sigma,
   ### bits (optional argument for mpfr; precise calculation)
   ### Output: an ordered tuple [vlow, vup]
   Gy[abs(Gy)<=gy_tol] <- 0 # machine precision
-  
+
   if(!all(Gy>=0)){
     #
     cat('bad gy',Gy,'\n')
   }
   u=ifelse(is.null(Gy), 0,rep(0,length(Gy)))
-  
+
   z = sum(v*y)
   # 2 norm square
-  vv = sum(v^2) 
+  vv = sum(v^2)
   sd = sigma*sqrt(vv)
   # rho as defined in hyun et al.
   rho = Gv / vv # rho should be an mpfr object

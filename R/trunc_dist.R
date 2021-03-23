@@ -94,7 +94,7 @@ ff <- function(z) {
 # add the bits later - should be fine w/o specifying precision
 
 naive.one.sided.pval <- function(z, mean, sd){
-  first_side <- pnorm(abs(z), mean =  mean, sd=sd, lower.tail = F)
+  first_side <- pnorm(abs(z), mean = mean, sd=sd, lower.tail = F)
   return(first_side)
 }
 
@@ -195,6 +195,7 @@ calc_p_value_safer <- function(df, vTy, nu_norm, sig, mu = 0, two_sided = TRUE) 
         arg2 = log_subtract(pnorm((min(cur_interval$max_mean,(-1)*abs(vTy)) - mu) / sqrt(nu_norm * sig), log.p = TRUE),
                             pnorm((cur_interval$min_mean - mu) / sqrt(nu_norm * sig), log.p = TRUE));
         n1 = log_sum_exp(n1, arg2);
+
         }
 
       }else{

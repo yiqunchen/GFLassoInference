@@ -8,6 +8,7 @@ Authors@R: c(person("Yiqun", "Chen", email = "yiqunc@uw.edu",
 Description: An implementation of powerful selective inference for graph fused lasso as described in Chen et al. (2021)
 License: GPL-3
 Depends: R (>= 3.5)
+Imports: Matrix, igraph, sparsesvd, MASS
 Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)
