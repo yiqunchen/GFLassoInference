@@ -47,8 +47,7 @@ without any coordinates leaving the path.}
 \item{do.gc}{internal garbage collection code}
 }
 \description{
-\hat{u}(\lambda) =
-\argmin_u \|y - D^T u\|\emph{2^2 \rm{s.t.} \|\u\|}\infty \leq \lambda
+hat{u}(lambda) =argmin_u |y - D^T u|_2^2 rm{s.t.} |u|_infty leq lambda
 }
 \details{
 where D is m x n. Here there is no assumption on D, and we use a

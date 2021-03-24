@@ -162,17 +162,17 @@ ComputeUnionIntervals_GFL <- function(y,
                      test_stats,
                      sigma*sqrt(sum(v*v)),
                      hyun_set,
-                     line_search_results,
                      two_sided)
 
   names(p_val_list) <- c('Naive','Hyun','Union','sum_intervals',
                          'truncation_set','test_stats','sd',
-                         'hyun_set','line_search_results',"two_sided")
+                         'hyun_set',
+                         "two_sided")
   return(p_val_list)
 }
 
 
-### This function computes iteratively the partion of intervals
+### This function computes iteratively the partition of intervals
 ### selected by the Gamma matrix with perturbed y
 ### The result is a union of intervals with the same selected
 ### components as y (observed value)

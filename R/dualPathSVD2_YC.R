@@ -3,8 +3,8 @@
 ##' computation of svd, and fixed a few bugs in the previous function (as of feb/5/2021).
 ##' This code first compute a solution path of the generalized lasso dual problem:
 ##'
-##' \hat{u}(\lambda) =
-##' \argmin_u \|y - D^T u\|_2^2 \rm{s.t.} \|\u\|_\infty \leq \lambda
+##' hat{u}(lambda) =argmin_u |y - D^T u|_2^2 rm{s.t.} |u|_infty leq lambda
+##'
 ##'
 ##' where D is m x n. Here there is no assumption on D, and we use a
 ##' fresh SVD at each iteration (computationally naive but stable).

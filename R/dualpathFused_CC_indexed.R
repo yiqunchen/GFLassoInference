@@ -49,8 +49,8 @@ dualpathFused_CC_indexed <- function(y, D, v, sigma, K_CC = NULL, K_lambda = NUL
     # tricks and a little bit of graph theory
     L = abs(crossprod(D))
     diag(L) = 0
-    gr = graph.adjacency(L,mode="upper") # Underlying graph
-    cl = clusters(gr)
+    gr = igraph::graph.adjacency(L,mode="upper") # Underlying graph
+    cl = igraph::clusters(gr)
     q = cl$no                            # Number of clusters
     i = cl$membership                    # Cluster membership
     x = f = numeric(n)  # solving linear system efficiently
