@@ -11,7 +11,7 @@ mpfr.tnorm.surv <- function(z, mean=0, sd=1, a, b, bits=NULL) {
     return(as.numeric((Rmpfr::pnorm(b)-Rmpfr::pnorm(z))/
                         (Rmpfr::pnorm(b)-Rmpfr::pnorm(a))))
   }
-  
+
   # Else, just use standard floating point calculations
   z = (z-mean)/sd
   a = (a-mean)/sd
@@ -28,16 +28,16 @@ tnorm.surv <- function(z, mean, sd, a, b, bits=NULL) {
   p = numeric(length(mean))
   p[mean==-Inf] = 0
   p[mean==Inf] = 1
-  
+
   # Try the multi precision floating point calculation first
   o = is.finite(mean)
   mm = mean[o]
-  pp = mpfr.tnorm.surv(z,mm,sd,a,b,bits = bits) 
-  
+  pp = mpfr.tnorm.surv(z,mm,sd,a,b,bits = bits)
+
   # If there are any NAs, then settle for an approximation
   oo = is.na(pp)
   if (any(oo)) pp[oo] = bryc.tnorm.surv(z,mm[oo],sd,a,b)
-  
+
   p[o] = pp
   return(p)
 }
@@ -68,7 +68,7 @@ bryc.tnorm.surv <- function(z, mean=0, sd=1, a, b) {
   a = (a-mean)/sd
   b = (b-mean)/sd
   n = length(mean)
-  
+
   term1 = exp(z*z)
   o = a > -Inf
   term1[o] = ff(a[o])*exp(-(a[o]^2-z[o]^2)/2)
@@ -77,7 +77,7 @@ bryc.tnorm.surv <- function(z, mean=0, sd=1, a, b) {
   term2[oo] = ff(b[oo])*exp(-(b[oo]^2-z[oo]^2)/2)
   # term2 = Rmpfr::mpfr2array(term2,dim=n)
   p = (ff(z)-term2)/(term1-term2)
-  
+
   # Sometimes the approximation can give wacky p-values,
   # outside of [0,1] ..
   #p[p<0 | p>1] = NA
@@ -158,7 +158,7 @@ calc_p_value_safer <- function(df, vTy, nu_norm, sig, mu = 0, two_sided = TRUE) 
   #     i <- i + 1;
   #     cur_interval <- df[i, ]
   #   }
-  #   
+  #
   #   cur_interval <- df[n_intervals, ]
   #   i <- n_intervals
   #   while (cur_interval$contained == 1 && i > 0) {
@@ -166,7 +166,7 @@ calc_p_value_safer <- function(df, vTy, nu_norm, sig, mu = 0, two_sided = TRUE) 
   #     i <- i - 1
   #     cur_interval <- df[i, ]
   #   }
-  #   
+  #
   #   s_bound = max(a, abs(b));
   #   k1 = abs(vTy) / sqrt(nu_norm * sig);
   #   k2 = s_bound / sqrt(nu_norm * sig);
@@ -206,8 +206,8 @@ calc_p_value_safer <- function(df, vTy, nu_norm, sig, mu = 0, two_sided = TRUE) 
         n1 = log_sum_exp(n1, arg2);
         }
       }
-      
     }
+
   }
   if(is.nan(exp(n1 - d1))){
     p = 0

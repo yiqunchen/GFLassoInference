@@ -27,7 +27,7 @@ ComputeUnionIntervals_GFL <- function(y,
                                       end_tolerance=1e-6,
                                       t=0.5,
                                       max_union_size = 100000,
-                                      early_stop=NULL,
+                                      early_stop = NULL,
                                       segment_list = NULL,
                                       complete_k_step = TRUE,
                                       intervals_delta = .Machine[[ "double.eps" ]]^0.5){
@@ -111,6 +111,7 @@ ComputeUnionIntervals_GFL <- function(y,
   # 1. select the relevant intervals for the positive direction
   pos_dir_union <- line_search_results[[2]][which(line_search_results[[1]])]
   # 2. format the union correctly
+  pos_dir_union <- lapply(pos_dir_union,function(x)c(min(x),max(x))) # numerical stability for intervals
   pos_intervals <- intervals::Intervals(
     matrix(unlist(pos_dir_union), ncol = 2, byrow = TRUE))
   # 3. take the union - up to machine epsilon accuracy
@@ -119,6 +120,7 @@ ComputeUnionIntervals_GFL <- function(y,
                                                                      type="relative"))
   # 4. do the same for the negative direction
   neg_dir_union <- line_search_results[[4]][which(line_search_results[[3]])]
+  neg_dir_union <- lapply(neg_dir_union,function(x)c(min(x),max(x))) # numerical stability for intervals
   # 2. format the union correctly
   neg_intervals <- intervals::Intervals(
     matrix(unlist(neg_dir_union), ncol = 2, byrow = TRUE))
@@ -251,7 +253,7 @@ GetUnionIntervals_GFL <- function(y, v, eta,
     ## abs don't matter
     while((temp_seg[[1]]$vlo-pos_dir_union[[pos_counter]][2])>=end_tolerance){
       eta_increase <- eta_increase*t
-      if(eta_increase<=1e-7){
+      if(eta_increase<=1e-6){
         cat('current phi', phi,'\n')
         print('eta too small, not gonna work,\n')
         break
@@ -267,6 +269,7 @@ GetUnionIntervals_GFL <- function(y, v, eta,
                                     comparison = comparison,
                                     segment_list = segment_list)
     }
+
     # update stopping criteria
 
     pos_upper_limit <- temp_seg[[1]]$vup
@@ -299,7 +302,7 @@ GetUnionIntervals_GFL <- function(y, v, eta,
     # index 1 is vlo and 2 is vup TODO: named list
     while(abs(temp_seg[[1]]$vup-neg_dir_union[[neg_counter]][1])>=end_tolerance){
       eta_increase <- eta_increase*t
-      if(eta_increase<=1e-7){
+      if(eta_increase<=1e-6){
         cat('current phi', phi,'\n')
         print('eta too small, not gonna work,\n')
         break
