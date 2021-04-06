@@ -50,7 +50,6 @@ ComputeUnionIntervals_GFL <- function(y,
   K <- length(f0$action)
   # we never really need the old graph?
   cluster_0 <- f0$pathobjs$membership
-  boundary_0 <- sort(f0$states[[length(f0$states)]],decreasing = F)
 
   temp_vlo <- unlist(f0$LS_list[names(f0$LS_list)=='vlo'])
   temp_vup <- unlist(f0$LS_list[names(f0$LS_list)=='vup'])
@@ -98,7 +97,6 @@ ComputeUnionIntervals_GFL <- function(y,
                                                stop_criteria = stop_criteria,
                                                sigma = sigma,
                                                cluster_0 = cluster_0,
-                                               boundary_0 = boundary_0,
                                                end_tolerance = end_tolerance,
                                                max_union_size = max_union_size,
                                                initail_line_seg = initail_line_seg,
@@ -171,6 +169,7 @@ ComputeUnionIntervals_GFL <- function(y,
                          'hyun_set',
                          "two_sided")
   return(p_val_list)
+
 }
 
 
@@ -186,7 +185,6 @@ GetUnionIntervals_GFL <- function(y, v, eta,
                                   stop_criteria,
                                   sigma,
                                   cluster_0,
-                                  boundary_0,
                                   end_tolerance,
                                   max_union_size,
                                   initail_line_seg,
@@ -241,7 +239,6 @@ GetUnionIntervals_GFL <- function(y, v, eta,
                                   K_lambda = K_lambda,
                                   stop_criteria = stop_criteria,
                                   old_cluster = cluster_0,
-                                  old_boundary = boundary_0,
                                   comparison = comparison,
                                   segment_list = segment_list)
 
@@ -265,7 +262,6 @@ GetUnionIntervals_GFL <- function(y, v, eta,
                                     K_lambda = K_lambda,
                                     stop_criteria = stop_criteria,
                                     old_cluster = cluster_0,
-                                    old_boundary = boundary_0,
                                     comparison = comparison,
                                     segment_list = segment_list)
     }
@@ -294,7 +290,6 @@ GetUnionIntervals_GFL <- function(y, v, eta,
                                   K_lambda = K_lambda,
                                   stop_criteria = stop_criteria,
                                   old_cluster = cluster_0,
-                                  old_boundary = boundary_0,
                                   comparison = comparison,
                                   segment_list = segment_list)
 
@@ -314,7 +309,6 @@ GetUnionIntervals_GFL <- function(y, v, eta,
                                     K_lambda = K_lambda,
                                     stop_criteria = stop_criteria,
                                     old_cluster = cluster_0,
-                                    old_boundary = boundary_0,
                                     comparison = comparison,
                                     segment_list = segment_list)
     }
@@ -351,7 +345,6 @@ check_segment_GFL <- function(y, v, phi,
                               c_1 = sum(v*y),
                               c_2 = sum(v*v),
                               old_cluster,
-                              old_boundary,
                               comparison,
                               stop_criteria,
                               K_CC = NULL,
@@ -360,7 +353,6 @@ check_segment_GFL <- function(y, v, phi,
 
   #### y_obs(phi) = y_obs - (v^Ty_obs-phi)*v/||v||_2^2
   # upper bound set up be the max int for now
-  old_boundary <- sort(old_boundary, decreasing = FALSE)
   new_y <- as.numeric(y-(sum(v*y)-phi)*v/sum(v*v)) # y'(phi)
 
   new_f0 <- dualpathFused_CC_indexed(new_y,
@@ -377,10 +369,7 @@ check_segment_GFL <- function(y, v, phi,
     graph_equal <- check_segment_in_model(segment_list,
                                           new_f0$pathobjs$membership)
   }
-  # if(comparison == "BD"){
-  #   new_boundary_0 <- sort(new_f0$states[[length(new_f0$states)]],decreasing = FALSE)
-  #   graph_equal <- all(new_boundary_0==old_boundary)
-  # }
+
   steps_taken <- max(new_f0$pathobjs$k,length(new_f0$action))
   # side info, not critical for inference
 
