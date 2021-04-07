@@ -153,13 +153,15 @@ Seq = function(a,b,by) {
   else return(integer(0))
 }
 
+#' This model takes in
+#' 1. @new_cluster new cluster assignment
+#' 2. @old_segment a list segment (represented by the positions of the nodes),
+#' and checks if the list of segments of interest is in the new graph
+#' (assume same ordering of nodes)
+#'@export
+#'
 check_segment_in_model <- function(old_segment, new_cluster){
-  #### This model takes in
-  #### 1. new cluster assignment
-  #### 2. a list segment (represented by the positions of the nodes)
-  #### we are interested in the old cluster
-  #### and checks if the list of segments of interest is in the
-  #### new graph (assume same ordering of nodes)
+
   old_segment_length <- length(old_segment)
 
   for (i in c(1:old_segment_length)){
