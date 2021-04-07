@@ -111,7 +111,8 @@ two.sided.tnorm.pval <- function(z, mean, sd, a, b, bits=NULL) {
                            b = b, bits = NULL)
   second_side <- 1-tnorm.surv(z = -1*abs(z), mean = mean, sd = sd, a = a,
                             b = b, bits = NULL)
-  two_sided_p_val <- first_side+second_side#2*min(first_side,second_side)
+  two_sided_p_val <- first_side+second_side
+  #2*min(first_side,second_side)
   return(two_sided_p_val)
 }
 
@@ -146,37 +147,24 @@ log_subtract <- function(x, y) {
   return(x + log1mexp(abs(y - x)));
 }
 
-calc_p_value_safer <- function(df, vTy, nu_norm, sig, mu = 0, two_sided = TRUE) {
-  # TAIL_THRESHOLD <- 30
-  n_intervals <- dim(df)[[1]]
 
-  # if (abs(vTy) / sqrt(nu_norm * sig) > TAIL_THRESHOLD) {
-  #   cur_interval <- df[1, ]
-  #   i <- 1
-  #   while (cur_interval$contained == 1 && i <= n_intervals) {
-  #     b = cur_interval$max_mean;
-  #     i <- i + 1;
-  #     cur_interval <- df[i, ]
-  #   }
-  #
-  #   cur_interval <- df[n_intervals, ]
-  #   i <- n_intervals
-  #   while (cur_interval$contained == 1 && i > 0) {
-  #     a = cur_interval$min_mean;
-  #     i <- i - 1
-  #     cur_interval <- df[i, ]
-  #   }
-  #
-  #   s_bound = max(a, abs(b));
-  #   k1 = abs(vTy) / sqrt(nu_norm * sig);
-  #   k2 = s_bound / sqrt(nu_norm * sig);
-  #   return(min(1.0, exp(0.5 * (k2 * k2 - k1 * k1)) * (k2 * k2 + 1) / (k1 * k2)))
-  # }
-
+# ----- Truncated Normal Distribution -----
+#' Survival function of truncated normal distribution.
+#' Log-sum-exp operations are used to avoid underflows in the upper tail probability of
+#'  a truncated normal distribution
+#'
+#' Let \eqn{X} be a normal random variable with mean \code{mu} and standard deviation \code{sig*nu_norm}.
+#' Truncating \eqn{X} to the set \eqn{df} is equivalent to conditioning on \eqn{{X \in df}}.
+#' So this function returns \eqn{P(|X| \ge v^{T}y | X \in df)} .
+#'
+#' @export
+#'
+calc_p_value_safer <- function(truncation, vTy, nu_norm, sig, mu = 0, two_sided = TRUE){
+  n_intervals <- dim(truncation)[[1]]
   n1 = -Inf;
   d1 = -Inf;
   for (i in c(1:n_intervals)) {
-    cur_interval <- df[i, ]
+    cur_interval <- truncation[i, ]
     if (cur_interval$contained == 1) {
       a = pnorm((cur_interval$max_mean - mu) / sqrt(nu_norm * sig), log.p = TRUE);
       b = pnorm((cur_interval$min_mean - mu) / sqrt(nu_norm * sig), log.p = TRUE);
@@ -216,3 +204,5 @@ calc_p_value_safer <- function(df, vTy, nu_norm, sig, mu = 0, two_sided = TRUE) 
   }
   return (p);
 }
+
+

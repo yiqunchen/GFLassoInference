@@ -2,14 +2,14 @@
 % Please edit documentation in R/approx_p_val.R
 \name{test_gfl_approx}
 \alias{test_gfl_approx}
-\title{Monte Carlo significance test for any clustering method}
+\title{Monte Carlo significance test for GFLasso}
 \usage{
 test_gfl_approx(
-  y = y_vec,
-  Dmat = Dmat,
-  v = contrast,
-  K = K_init,
-  sigma = sigma,
+  y,
+  Dmat,
+  v,
+  K_init,
+  sigma,
   segment_list,
   two_sided = TRUE,
   ndraws = 1000,
@@ -18,5 +18,5 @@ test_gfl_approx(
 )
 }
 \description{
-Monte Carlo significance test for any clustering method
+Monte Carlo significance test for GFLasso
 }
