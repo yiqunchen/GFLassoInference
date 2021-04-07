@@ -151,8 +151,11 @@ ComputeUnionIntervals_GFL <- function(y,
 
   #cat(union_cond_p_val,'p Union, 2-sided', '\n')
 
-  hyun_set = list(c(initail_line_seg$vlo,
-                    initail_line_seg$vup))
+  # hyun_set = list(c(initail_line_seg$vlo,
+  #                   initail_line_seg$vup))
+
+  hyun_set <- intervals::Intervals(matrix(c(initail_line_seg$vlo,
+                                   initail_line_seg$vup), ncol = 2))
 
   p_val_list <- list(naive_p_val,
                      hyun_p_val,

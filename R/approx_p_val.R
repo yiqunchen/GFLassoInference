@@ -1,11 +1,11 @@
-#' Monte Carlo significance test for GFLasso
+#' Monte Carlo significance test for GFLasso, two sided-alternatives only
+#' @export
 test_gfl_approx <- function(y,
                             Dmat,
                             v,
                             K_init,
                             sigma,
                             segment_list,
-                            two_sided=TRUE,
                             ndraws=1000,
                             stop_criteria = "K",
                             random_seed=2021){

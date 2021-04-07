@@ -2,7 +2,7 @@
 % Please edit documentation in R/approx_p_val.R
 \name{test_gfl_approx}
 \alias{test_gfl_approx}
-\title{Monte Carlo significance test for GFLasso}
+\title{Monte Carlo significance test for GFLasso, two sided-alternatives only}
 \usage{
 test_gfl_approx(
   y,
@@ -11,12 +11,11 @@ test_gfl_approx(
   K_init,
   sigma,
   segment_list,
-  two_sided = TRUE,
   ndraws = 1000,
   stop_criteria = "K",
   random_seed = 2021
 )
 }
 \description{
-Monte Carlo significance test for GFLasso
+Monte Carlo significance test for GFLasso, two sided-alternatives only
 }
