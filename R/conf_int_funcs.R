@@ -170,5 +170,6 @@ compute_CI <- function(vTy, vTv, sigma, truncation, alpha) {
     Inf
   })
 
+
   return(c(L, U))
 }
