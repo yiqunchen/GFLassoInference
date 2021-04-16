@@ -95,16 +95,16 @@ compute_CI <- function(vTy, vTv, sigma, truncation, alpha) {
   # so we can do a modified bisection search to find x1.
   step <- 0
   x1.up <- q * scale + scale
-  x1 <- q * scale - 1 * scale
+  x1 <- q * scale - 3 * scale
   f1 <- fun(x1)
-  while(step <= 20) {
+  while(step <= 50) {
     if (is.na(f1)) { # x1 is too small
       x1 <- (x1 + x1.up) / 2
       f1 <- fun(x1)
     }
     else if (f1 > alpha/2) { # x1 is too big
       x1.up <- x1
-      x1 <- x1 - 1 * 1.2^step
+      x1 <- x1 - 3 * 1.4^step
       f1 <- fun(x1)
       step <- step + 1
     }
@@ -120,17 +120,17 @@ compute_CI <- function(vTy, vTv, sigma, truncation, alpha) {
   # fun(x) < 1 - alpha/2 if x too small.
   # again can do a modified bisection search to find x2.
   step <- 0
-  x2 = q * scale + 1 * scale
+  x2 = q * scale + 3 * scale
   x2.lo = q * scale - scale
   f2 = fun(x2)
-  while(step <= 20) {
+  while(step <= 50) {
     if (is.na(f2)) { # x2 is too big
       x2 <- (x2 + x2.lo) / 2
       f2 <- fun(x2)
     }
     else if (f2 < 1 - alpha/2) { # x2 is too small
       x2.lo <- x2
-      x2 <- x2 + 1 * 1.2^step
+      x2 <- x2 + 3 * 1.4^step
       f2 <- fun(x2)
       step <- step + 1
     }
@@ -158,14 +158,14 @@ compute_CI <- function(vTy, vTv, sigma, truncation, alpha) {
   # we know the functions are increasing
 
   L <- tryCatch({
-    stats::uniroot(fun.L, c(x1, x2), extendInt = "upX", tol = 1e-5)$root
+    stats::uniroot(fun.L, c(x1, x2), extendInt = "upX", tol = 1e-4)$root
   }, error = function(e) {
     -Inf
   })
 
 
   U <- tryCatch({
-    stats::uniroot(fun.U, c(x1, x2), extendInt = "upX", tol = 1e-5)$root
+    stats::uniroot(fun.U, c(x1, x2), extendInt = "upX", tol = 1e-4)$root
   }, error = function(e) {
     Inf
   })

@@ -130,7 +130,7 @@ dualpathFused_CC_indexed <- function(y, D, v, sigma, K_CC = NULL, K_lambda = NUL
     # Update our graph
     e = which(D[ihit,]!=0)
     gr[e[1],e[2]] = 0             # Delete edge
-    newcl = subcomponent(gr,e[1]) # New cluster
+    newcl = igraph::subcomponent(gr,e[1]) # New cluster
     oldcl = which(i==i[e[1]])     # Old cluster
     # If these two clusters aren't the same, update
     # the memberships
@@ -407,7 +407,7 @@ dualpathFused_CC_indexed <- function(y, D, v, sigma, K_CC = NULL, K_lambda = NUL
         # Update our graph
         e = which(D1[ihit,]!=0)
         gr[e[1],e[2]] = 0             # Delete edge
-        newcl = subcomponent(gr,e[1]) # New cluster
+        newcl = igraph::subcomponent(gr,e[1]) # New cluster
         oldcl = which(i==i[e[1]])     # Old cluster
         # If these two clusters aren't the same, update
         # the memberships
@@ -479,7 +479,7 @@ dualpathFused_CC_indexed <- function(y, D, v, sigma, K_CC = NULL, K_lambda = NUL
         # Update our graph
         e = which(D2[ileave,]!=0)
         gr[e[1],e[2]] = 1             # Add edge
-        newcl = subcomponent(gr,e[1]) # New cluster
+        newcl = igraph::subcomponent(gr,e[1]) # New cluster
         oldcl = which(i==i[e[1]])     # Old cluster
         # If these two clusters aren't the same, update
         # the memberships
