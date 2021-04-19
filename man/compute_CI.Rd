@@ -4,7 +4,7 @@
 \alias{compute_CI}
 \title{compute selective confidence intervals}
 \usage{
-compute_CI(vTy, vTv, sigma, truncation, alpha)
+compute_CI(vTy, vTv, sigma, truncation, alpha = 0.05, steps_lim = 50)
 }
 \arguments{
 \item{vTy}{y: the observed response vector}
@@ -18,7 +18,10 @@ is left blank, we use the sample variance as a conservative estimate.}
 \item{truncation, }{the truncation set (object: intervals)
 Computes a confidence interval for the mean of a truncated normal distribution.}
 
-\item{alpha, }{the significance level.}
+\item{alpha, }{the significance level. Default to 0.05}
+
+\item{steps_lim, }{the maximum steps bisection method will take to initialize the LCB and UCB, default
+to 50.}
 }
 \value{
 This function returns a vector of lower and upper confidence limits.

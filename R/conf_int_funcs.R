@@ -54,12 +54,14 @@ TNSurv <- function(truncation, vTy, nu_norm, sig, mu = 0){
 #' @param sigma The known noise standard deviation.
 #' If unknown, we recommend a conservative estimate. If it
 #' is left blank, we use the sample variance as a conservative estimate.
-#' @param alpha, the significance level.
+#' @param alpha, the significance level. Default to 0.05
+#' @param steps_lim, the maximum steps bisection method will take to initialize the LCB and UCB, default
+#' to 50.
 #' @return This function returns a vector of lower and upper confidence limits.
 #'
 #' @export
 
-compute_CI <- function(vTy, vTv, sigma, truncation, alpha) {
+compute_CI <- function(vTy, vTv, sigma, truncation, alpha=0.05, steps_lim=50) {
   ### Conservative guess
   scale <- sigma * sqrt(vTv)
   q <- sum(vTy) / scale
@@ -97,7 +99,7 @@ compute_CI <- function(vTy, vTv, sigma, truncation, alpha) {
   x1.up <- q * scale + scale
   x1 <- q * scale - 3 * scale
   f1 <- fun(x1)
-  while(step <= 50) {
+  while(step <= steps_lim) {
     if (is.na(f1)) { # x1 is too small
       x1 <- (x1 + x1.up) / 2
       f1 <- fun(x1)
@@ -123,7 +125,7 @@ compute_CI <- function(vTy, vTv, sigma, truncation, alpha) {
   x2 = q * scale + 3 * scale
   x2.lo = q * scale - scale
   f2 = fun(x2)
-  while(step <= 50) {
+  while(step <= steps_lim) {
     if (is.na(f2)) { # x2 is too big
       x2 <- (x2 + x2.lo) / 2
       f2 <- fun(x2)
