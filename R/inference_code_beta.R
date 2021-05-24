@@ -27,7 +27,7 @@ ComputeUnionIntervals_GFL <- function(y,
                                       end_tolerance=1e-6,
                                       t=0.5,
                                       max_union_size = 100000,
-                                      early_stop = NULL,
+                                      early_stop = sqrt(sum(v*v*sigma))*20,
                                       segment_list = NULL,
                                       complete_k_step = TRUE,
                                       intervals_delta = .Machine[[ "double.eps" ]]^0.5){
@@ -277,7 +277,7 @@ GetUnionIntervals_GFL <- function(y, v, eta,
     pos_dir_graph_cc[pos_counter] <- temp_seg[[2]]
     pos_step_taken[pos_counter] <- temp_seg[[3]]
     pos_dir_union[[pos_counter]] <- c(temp_seg[[1]]$vlo, temp_seg[[1]]$vup)
-    #cat('test sanity check, pos ', pos_dir_union[[pos_counter]],'\n')
+    cat('test sanity check, pos ', pos_dir_union[[pos_counter]],'\n')
   }
 
   # we then proceed to the negative direction
@@ -323,7 +323,7 @@ GetUnionIntervals_GFL <- function(y, v, eta,
     neg_dir_graph_cc[neg_counter] <- temp_seg[[2]]
     neg_step_taken[neg_counter] <- temp_seg[[3]]
     neg_dir_union[[neg_counter]] <- c(temp_seg[[1]]$vlo, temp_seg[[1]]$vup)
-    #cat('test sanity check, neg ', neg_dir_union[[neg_counter]],'\n')
+    cat('test sanity check, neg ', neg_dir_union[[neg_counter]],'\n')
   }
 
   if(!is.null(early_stop)){

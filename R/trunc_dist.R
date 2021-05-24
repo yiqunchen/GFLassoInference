@@ -116,6 +116,7 @@ two.sided.tnorm.pval <- function(z, mean, sd, a, b, bits=NULL) {
   return(two_sided_p_val)
 }
 
+
 log_sum_exp <- function(logx, logy) {
   if (logx > logy) {
     a = logx;
@@ -153,36 +154,61 @@ calc_p_value_safer <- function(truncation, vTy, nu_norm, sig, mu = 0, two_sided 
   n1 = -Inf;
   d1 = -Inf;
   for (i in c(1:n_intervals)) {
-    cur_interval <- truncation[i, ]
-    if (cur_interval$contained == 1) {
+      cur_interval <- truncation[i, ]
       a = pnorm((cur_interval$max_mean - mu) / sqrt(nu_norm * sig), log.p = TRUE);
       b = pnorm((cur_interval$min_mean - mu) / sqrt(nu_norm * sig), log.p = TRUE);
+      # truncate small prob.
+      #if(abs(a)<=sqrt(.Machine$double.eps)){a=0}
+      #if(abs(b)<=sqrt(.Machine$double.eps)){b=0}
+
       arg2 = log_subtract(a, b);
       d1 = log_sum_exp(d1, arg2);
       # one-sided p-value
       if(two_sided){
         # two-sided p-values
-        if (cur_interval$max_mean >= abs(vTy)) {
-        arg2 = log_subtract(pnorm((cur_interval$max_mean - mu) / sqrt(nu_norm * sig), log.p = TRUE ),
-                            pnorm((max(cur_interval$min_mean, vTy) - mu) / sqrt(nu_norm * sig), log.p = TRUE));
-        n1 = log_sum_exp(n1, arg2);
+        if (cur_interval$max_mean >= abs(vTy)){
+          part_a = pnorm((cur_interval$max_mean - mu) / sqrt(nu_norm * sig), log.p = TRUE)
+          part_b = pnorm((max(cur_interval$min_mean, vTy) - mu) / sqrt(nu_norm * sig), log.p = TRUE)
+
+          if(vTy!=abs(vTy)){
+            if(abs(part_a)<=1e-20){
+              part_a=0;
+            part_b=0}
+            if(abs(part_b)<=1e-20){part_b=0}
+          }
+
+
+          arg2 = log_subtract(part_a,part_b);
+          n1 = log_sum_exp(n1, arg2);
         }
 
         if (cur_interval$min_mean <= ((-1)*abs(vTy))) {
-        arg2 = log_subtract(pnorm((min(cur_interval$max_mean,(-1)*abs(vTy)) - mu) / sqrt(nu_norm * sig), log.p = TRUE),
-                            pnorm((cur_interval$min_mean - mu) / sqrt(nu_norm * sig), log.p = TRUE));
-        n1 = log_sum_exp(n1, arg2);
+          part_a <- pnorm((min(cur_interval$max_mean,(-1)*abs(vTy)) - mu) / sqrt(nu_norm * sig), log.p = TRUE)
+          part_b <- pnorm((cur_interval$min_mean - mu) / sqrt(nu_norm * sig), log.p = TRUE)
+          # only zero out if it's the opposite direction
 
+          if(vTy==abs(vTy)){
+            if(abs(part_a)<=1e-20){part_a=0;
+            part_b=0}
+            if(abs(part_b)<=1e-20){part_b=0}
+          }
+
+          arg2 = log_subtract(part_a,part_b);
+          n1 = log_sum_exp(n1, arg2);
         }
-
       }else{
         # one-sided p-value
         if (cur_interval$max_mean >= abs(vTy)) {
-        arg2 = log_subtract(pnorm((cur_interval$max_mean - mu) / sqrt(nu_norm * sig), log.p = TRUE ),
-                            pnorm((max(cur_interval$min_mean, vTy) - mu) / sqrt(nu_norm * sig), log.p = TRUE));
-        n1 = log_sum_exp(n1, arg2);
+          part_a <- pnorm((cur_interval$max_mean - mu) / sqrt(nu_norm * sig), log.p = TRUE)
+          part_b <- pnorm((max(cur_interval$min_mean, vTy) - mu) / sqrt(nu_norm * sig), log.p = TRUE)
+          if(abs(part_a)<=1e-20){
+            part_a=0;
+          part_b=0}
+          if(abs(part_b)<=1e-20){part_b=0}
+
+          arg2 = log_subtract(part_a,part_b);
+          n1 = log_sum_exp(n1, arg2);
         }
-      }
     }
 
   }
