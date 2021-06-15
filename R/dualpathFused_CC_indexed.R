@@ -13,7 +13,8 @@
 # input contrast vector v
 #' @export
 dualpathFused_CC_indexed <- function(y, D, v, sigma, K_CC = NULL, K_lambda = NULL,
-                                     approx=FALSE, maxsteps=2000, minlam=0, maxsteps_factor = 100,
+                                     approx=FALSE, maxsteps=200, minlam=0,
+                                     maxsteps_factor = 100,
                              rtol=1e-7, btol=1e-7, cdtol = 1e-9,verbose=FALSE,
                              object=NULL, segment_list = NULL, stop_criteria = 'K') {
 

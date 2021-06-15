@@ -1,5 +1,5 @@
 Package: PGInference
-Title:  Powerful Graph fused lasso Inference 
+Title: Powerful Graph fused lasso Inference 
 Version: 1.0
 Maintainer: Yiqun Chen <yiqunc@uw.edu>
 Author: Yiqun Chen
@@ -13,3 +13,7 @@ Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.1.1
+Suggests: 
+    rmarkdown,
+    knitr
+VignetteBuilder: knitr
