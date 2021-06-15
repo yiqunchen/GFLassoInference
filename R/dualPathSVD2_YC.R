@@ -1,3 +1,6 @@
+##' Polyhedron post-selection inference selection with faster
+##' computation of svd
+##'
 ##' Adapted from https://github.com/sangwon-hyun/genlassoinf/blob/master/code/dualPathSvd2.R,
 ##' modified to compute the polyhedron post-selection inference selection with faster
 ##' computation of svd, and fixed a few bugs in the previous function (as of feb/5/2021).

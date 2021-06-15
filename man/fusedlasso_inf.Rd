@@ -2,11 +2,7 @@
 % Please edit documentation in R/exact_inference_func.R
 \name{fusedlasso_inf}
 \alias{fusedlasso_inf}
-\title{More powerful test for  the graph fused lasso
-This functions tests the null hypothesis of no difference in means between
-connected components \code{c1} and \code{c2} of the output of the graph fused
-lasso solution. The ordering are numbered as per the results of the \code{fusedlasso}
-function in the \code{genlasso} package.}
+\title{More powerful test for  the graph fused lasso}
 \usage{
 fusedlasso_inf(
   y,
@@ -56,11 +52,16 @@ Returns a list with elements:
 }
 }
 \description{
+This functions tests the null hypothesis of no difference in means between
+connected components \code{c1} and \code{c2} of the output of the graph fused
+lasso solution. The ordering are numbered as per the results of the \code{fusedlasso}
+function in the \code{genlasso} package.
+}
+\details{
 Currently, we support two different conditioning sets: conditioning set 1 is based on
 the output after K steps dual-path algorithm; and conditioning set 2 is based on the
 output of the after the dual-path algorithm yields c connected components in the output.
-}
-\details{
+
 Input:
 
 Consider the generative model \eqn{Y_t = \beta_t + \epsilon_t, \epsilon_t \sim N(0, \sigma^2)}, where

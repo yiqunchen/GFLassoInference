@@ -2,13 +2,15 @@
 % Please edit documentation in R/conf_int_funcs.R
 \name{TNSurv}
 \alias{TNSurv}
-\title{Survival function of truncated normal distribution.
-Log-sum-exp operations are used to avoid underflows in the upper tail probability of
-a truncated normal distribution}
+\title{Survival function of truncated normal distribution.}
 \usage{
 TNSurv(truncation, vTy, nu_norm, sig, mu = 0)
 }
 \description{
+Log-sum-exp operations are used to avoid underflows in the upper tail probability of
+a truncated normal distribution
+}
+\details{
 Let \eqn{X} be a normal random variable with mean \code{mu} and standard deviation \code{sig*nu_norm}.
 Truncating \eqn{X} to the set \eqn{df} is equivalent to conditioning on \eqn{{X \in df}}.
 So this function returns \eqn{P(|X| \ge v^{T}y | X \in df)} .

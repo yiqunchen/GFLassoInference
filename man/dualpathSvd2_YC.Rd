@@ -2,10 +2,8 @@
 % Please edit documentation in R/dualPathSVD2_YC.R
 \name{dualpathSvd2_YC}
 \alias{dualpathSvd2_YC}
-\title{Adapted from https://github.com/sangwon-hyun/genlassoinf/blob/master/code/dualPathSvd2.R,
-modified to compute the polyhedron post-selection inference selection with faster
-computation of svd, and fixed a few bugs in the previous function (as of feb/5/2021).
-This code first compute a solution path of the generalized lasso dual problem:}
+\title{Polyhedron post-selection inference selection with faster
+computation of svd}
 \usage{
 dualpathSvd2_YC(
   y,
@@ -47,9 +45,14 @@ without any coordinates leaving the path.}
 \item{do.gc}{internal garbage collection code}
 }
 \description{
-hat{u}(lambda) =argmin_u |y - D^T u|_2^2 rm{s.t.} |u|_infty leq lambda
+Adapted from https://github.com/sangwon-hyun/genlassoinf/blob/master/code/dualPathSvd2.R,
+modified to compute the polyhedron post-selection inference selection with faster
+computation of svd, and fixed a few bugs in the previous function (as of feb/5/2021).
+This code first compute a solution path of the generalized lasso dual problem:
 }
 \details{
+hat{u}(lambda) =argmin_u |y - D^T u|_2^2 rm{s.t.} |u|_infty leq lambda
+
 where D is m x n. Here there is no assumption on D, and we use a
 fresh SVD at each iteration (computationally naive but stable).
 

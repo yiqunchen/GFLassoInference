@@ -1,6 +1,7 @@
 # ----- main function to test the means of estimated connected components -----
 
 #' More powerful test for  the graph fused lasso
+#'
 #' This functions tests the null hypothesis of no difference in means between
 #' connected components \code{c1} and \code{c2} of the output of the graph fused
 #' lasso solution. The ordering are numbered as per the results of the \code{fusedlasso}

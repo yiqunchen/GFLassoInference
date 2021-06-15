@@ -1,6 +1,7 @@
 
 # ----- Truncated Normal Distribution -----
 #' Survival function of truncated normal distribution.
+#'
 #' Log-sum-exp operations are used to avoid underflows in the upper tail probability of
 #'  a truncated normal distribution
 #'
