@@ -25,6 +25,9 @@
 #' It must be specified if method=="CC".
 #' @param early_stop Numeric; specify when the truncation set computation
 #' should be terminated. The default is NULL, which indicates infinity.
+#' @param compute_ci Logical; the default is False. Specifying whether confidence intervals for \eqn{\nu^{T}\beta}, the
+#' difference in means between the two estimated connected components, should be computed.
+#' @param alpha_level Numeric; parameter for the 1-\code{alpha_level} confidence interval, defeault to 0.05
 #' @return Returns a list with elements:
 #' \itemize{
 #' \item \code{Union} the p-value proposed in Chen et al. (2021+)
@@ -35,6 +38,7 @@
 #' \item \code{Naive} the naive p-value using a z-test
 #' \item \code{Hyun} the p-value proposed in Hyun et al. (2018)
 #' \item \code{hyun_set} the conditioning set of  Hyun et al. (2018) stored as \code{Intervals} class
+#' \item \code{CI_result} confidence interval of level 1-\code{alpha_level} if \code{compute_ci=TRUE}
 #' }
 #' @export
 #'
@@ -84,7 +88,8 @@
 #' Hyun S, G’Sell M, Tibshirani RJ. (2018) Exact post-selection inference for the generalized lasso path. Electron J Stat.
 
 
-fusedlasso_inf <- function(y, D, c1, c2, method, sigma, K=NULL, c=NULL, early_stop=NULL){
+fusedlasso_inf <- function(y, D, c1, c2, method, sigma, K=NULL, c=NULL, early_stop=NULL,
+                           compute_ci = FALSE, alpha_level = 0.05){
 
   if(!method%in%c("K","CC")){stop("Method must be 'K' or 'CC'.")}
   if((method=="K")&is.null(K)){stop("Must specify K, the steps of the dual-path algorithm.")}
@@ -106,6 +111,7 @@ fusedlasso_inf <- function(y, D, c1, c2, method, sigma, K=NULL, c=NULL, early_st
 
   fused_lasso_mem <- fused_lasso_sol$pathobjs$membership
   n_clusters <- length(unique(fused_lasso_mem))
+
 
   if(max(c1,c2)>n_clusters){
     stop(paste0("Only ",n_clusters," clusters are estimated,
@@ -155,8 +161,20 @@ fusedlasso_inf <- function(y, D, c1, c2, method, sigma, K=NULL, c=NULL, early_st
 
   all_beta_hat <- fused_lasso_sol_output$beta
 
+  if(compute_ci){
+    CI_result <- compute_CI(search_result$test_stats, (search_result$sd)^2, 1,
+               truncation=search_result$truncation_set,
+               alpha=alpha_level, steps_lim=50)
+  }else{
+    CI_result <- NULL
+  }
+
+
   return_result <- c(search_result, list(connected_comp = fused_lasso_mem,
+                                         CI_result = CI_result,
                                          beta_hat = all_beta_hat[,ncol(all_beta_hat)]))
+
+
 
   return(return_result)
 

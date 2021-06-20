@@ -80,17 +80,72 @@
 
     
     
+<center>
+<div class="figure">
+<img src="../man/figures/combined_plot_exp_7_cell_29_paper_example.png" style="width:80.0%" alt=""><p class="caption">Figure 1: Illustrative example for recording 29 from Chen et al. (2013), which uses the GCaMP6f indicator. The cell’s fluorescence trace is displayed in gray. Spikes estimated via the <span class="math inline">\(\ell_0\)</span> problem are displayed in orange; the spikes with <em>selective</em> <span class="math inline">\(p\)</span>-values below <span class="math inline">\(0.05\)</span> (with <span class="math inline">\(h=20\)</span>) are displayed in blue; and the true spike times are shown in black.</p>
+</div>
+</center>
 <div id="overview" class="section level3">
 <h3 class="hasAnchor">
 <a href="#overview" class="anchor"></a>Overview</h3>
+<p>The graph fused lasso (GFL) is widely used to reconstruct signals that are piecewise constant on a pre-defined graph, meaning that nodes connected by an edge in the graph tend to have identical values. Many special case of the graph fused lasso have been studied in the literature. For instance, when the underlying graph is a one-dimensional chain graph, it’s known as the one-dimensional fused lasso, a well-studied method for changepoint detection. When the underlying graph is two- or three-dimensional grid graph, the GFL is known as the total-variational denoising. One desirable property of the GFL is that we can segment the reconstructed signals into <em>connected components</em>, that is, sets of elements of the reconstructed signals that share a common value and are connected in the original graph.</p>
+<p>We consider testing for a difference in the means of two connected components estimated using the graph fused lasso. A naive procedure such as a z-test for a difference in means will not control the selective Type I error — the probability of falsely rejecting the null hypothesis <em>given that we decided to conduct the test</em> — since the hypothesis that we are testing is itself a function of the data.</p>
+<p>In our manuscript, we propose a new test for this task that controls the selective Type I error, and conditions on much less information than existing approaches, leading to substantially higher power. In addition, we provide a computationally-efficient implementation of the proposed p-value.</p>
+<p>In this tutorial, we illustrate a test of the null hypothesis that there is no difference in means between two estimated connected components via the graph fused lasso with a 2D grid graph. Details for our method can be found in our manuscript at <a href="">place holder</a>.</p>
+</div>
+<div id="model-setup" class="section level3">
+<h3 class="hasAnchor">
+<a href="#model-setup" class="anchor"></a>Model setup</h3>
+<p>We consider a vector <span class="math inline">\(Y \in \mathbb{R}^p\)</span>, assumed to be a noisy realization of a signal <span class="math inline">\(\beta \in \mathbb{R}^p\)</span>, <span class="math display">\[Y_j = \beta_j + \epsilon_j , \quad \epsilon_j \sim_{\text{i.i.d.}} \mathcal{N}(0, \sigma^2), \quad j =1, \ldots, p,\]</span> with known variance <span class="math inline">\(\sigma^2\)</span>.<br>
+We assume that <span class="math inline">\(\beta\)</span> is , meaning that the elements of <span class="math inline">\(\beta\)</span> are ordered, and adjacent elements tend to take on equal values.</p>
+</div>
+<div id="graph-fused-lasso" class="section level3">
+<h3 class="hasAnchor">
+<a href="#graph-fused-lasso" class="anchor"></a>Graph fused lasso</h3>
+<p>It is natural to estimate <span class="math inline">\(\beta\)</span> by the graph fused lasso, <span class="math display">\[
+  \hat{\beta} = \text{argmin}_{\beta \in \mathbb{R}^p} \left\{ \frac{1}{2}\Vert y-\beta\Vert_2^2 +\lambda \sum_{(j,j')\in E}|\beta_j-\beta_{j'}| \right\},
+\]</span> where <span class="math inline">\(G=(V,E)\)</span> is an undirected graph, <span class="math inline">\(V=\{1,\ldots,p\}\)</span>, and <span class="math inline">\((j,j') \in E\)</span> indicates that the <span class="math inline">\(j\)</span>th and <span class="math inline">\(j'\)</span>th vertices in the graph are connected by an edge.</p>
+<p>For sufficiently large values of the non-negative tuning parameter <span class="math inline">\(\lambda\)</span>, we will have <span class="math inline">\(\hat\beta_j = \hat\beta_{j'}\)</span> for some <span class="math inline">\((j,j') \in E\)</span>. We can segment <span class="math inline">\(\hat\beta\)</span> into  — that is, sets of elements of <span class="math inline">\(\hat\beta\)</span> that are connected in the original graph and share a common value.</p>
+</div>
+<div id="inference-for-the-presence-of-spikes" class="section level3">
+<h3 class="hasAnchor">
+<a href="#inference-for-the-presence-of-spikes" class="anchor"></a>Inference for the presence of spikes</h3>
+<p>To quantify the uncertainty of these estimates, we test the null hypothesis that the calcium in the neighborhood of an estimated spikes decays exponentially. In particular, consider the <span class="math inline">\(j\)</span>th estimated spike location, denoted as <span class="math inline">\(\hat\tau_j\)</span>, under a simple assumption that there are no spikes within a window of <span class="math inline">\(+h\)</span> and <span class="math inline">\(-h\)</span> of <span class="math inline">\(\hat\tau_j\)</span>. Then we wish to test the null hypothesis <span class="math display">\[\begin{equation}
+  H_0: \nu^\top c=0 \mbox{ versus } H_1: \nu^\top c &gt; 0,
+    \label{eq:null-nu}
+  \end{equation}\]</span> where <span class="math display">\[\nu_{t} = 
+\begin{cases}
+- \frac{\gamma (\gamma^2-1)}{\gamma^2-\gamma^{-2h+2}}    \gamma^{t-\hat\tau_j}    , &amp; \hat\tau_j-h+1 \leq  t \leq \hat\tau_j, \\
+\frac{\gamma^2 -1 }{\gamma^{2h}-1} \gamma^{t-(\hat\tau_j+1)}   , &amp; \hat\tau_j + 1\leq t \leq \hat\tau_j+h,\\
+ 0, &amp; \text{ otherwise. } \\
+\end{cases}\]</span></p>
+<p>In a nutshell, the definition of <span class="math inline">\(\nu\)</span> above accounts for the underlying AR(1) mean structure of <span class="math inline">\(c_t\)</span>. More intuition can be found in Section 2.1 of our manuscript (Chen et al. 2021). Intuitively, larger values of <span class="math inline">\(h\)</span> corresponds to more data used to test the null hypothesis of interest, resulting in larger power. However, when <span class="math inline">\(h\)</span> is larger, <span class="math inline">\(H_0\)</span> is also less likely to hold for the same estimated spike location <span class="math inline">\(\hat\tau_j\)</span>.</p>
+<p>Now suppose that we test for the presence of a spike only at timepoints at a given timepoint if</p>
+<ol style="list-style-type: decimal">
+<li>we estimate a spike, and</li>
+<li>there is an increase in fluorescence at that timepoint.</li>
+</ol>
+<p>This results in a challenging selective inference problem: we need to account for the process that led us to estimate a spike this timepoint!</p>
+<p>This motivates the following <span class="math inline">\(p\)</span>-value: <span class="math display">\[\mathbb{P}_{H_0}\left(\nu^{\top} Y \geq \nu^{\top} y \;\middle\vert\; \hat\tau_j \in \mathcal{M}(Y) , \nu^{\top}Y &gt; 0, \Pi_{\nu}^{\perp} Y= \Pi_{\nu}^{\perp} \right),\]</span> where <span class="math inline">\(\mathcal{M}(y)\)</span> denotes the set of spikes estimated from <span class="math inline">\(y\)</span> via the <span class="math inline">\(\ell_0\)</span> problem; and <span class="math inline">\(\Pi_{\nu}^{\perp}\)</span> is an orthogonal projection operator used to eliminate nuisance parameters. We show that this <span class="math inline">\(p\)</span>-value for testing <span class="math inline">\(H_0\)</span> can be written as <span class="math display">\[\mathbb{P}\left(\phi \geq \nu^\top y \; \middle|\;  \hat{\tau}_j \in \mathcal{M}(y'(\phi)), \phi\geq 0\right),\]</span> where <span class="math inline">\(\phi\sim \mathcal{N}(0,\sigma^2||\nu||_2^2)\)</span>, and <span class="math display">\[y'(\phi) = \Pi_{\nu}^{\perp}y+\phi\cdot \frac{\nu}{||\nu||_2^2} = y+\left(\frac{\phi-\nu^{\top}y}{||\nu||_2^2}\right)\nu\]</span> is a perturbation of the observed data <span class="math inline">\(y\)</span>, along the direction of <span class="math inline">\(\nu\)</span>.</p>
+<p>Moreover, if we denote <span class="math inline">\(\mathcal{S}=\{\phi: \hat\tau_j \in \mathcal{M}(y'(\phi))\}\)</span>, the <span class="math inline">\(p\)</span>-value can be equivalently expressed as <span class="math display">\[\mathbb{P}\left(\phi \geq \nu^\top y \;\middle |\; \phi \in \mathcal{S}\cap(0,\infty)\right).\]</span> Now since <span class="math inline">\(\phi\sim \mathcal{N}(0,\sigma^2||\nu||_2^2)\)</span>, it follows that <span class="math inline">\(\phi \;|\; \phi \in \mathcal{S}\cap(0,\infty))\)</span> will follow a truncated normal distribution. Thus the computation of the <span class="math inline">\(p\)</span>-value boils down to characterizing the set <span class="math inline">\(\mathcal{S}\)</span>.</p>
+<p>Our software implements an efficient calculation of this <span class="math inline">\(p\)</span>-value by analytically characterizing the set <span class="math inline">\(\mathcal{S}\)</span>. The resulting <span class="math inline">\(p\)</span>-value will control the selective Type I error, in the sense of Lee et al. (2016) and Fithian et al. (2014). Additional details can be found in Sections 2 and 3 of our paper (Chen et al. 2021)).</p>
+<p>Remark: by contrast, a naive (Wald) <span class="math inline">\(p\)</span>-value takes the form <span class="math display">\[\mathbb{P}\left(\phi \geq \nu^\top y \right).\]</span> This approach will not control the selective Type I error, i.e., it will reject <span class="math inline">\(H_0\)</span> too often when we test <span class="math inline">\(H_0\)</span> for spikes estimated from the data.</p>
+</div>
+<div id="extensions" class="section level3">
+<h3 class="hasAnchor">
+<a href="#extensions" class="anchor"></a>Extensions</h3>
+<p>Our software also allows for the following extensions:</p>
+<ol style="list-style-type: decimal">
+<li>Generate <span class="math inline">\((1-\alpha)\)</span> selective confidence intervals for the parameter <span class="math inline">\(\nu^\top c\)</span>, the change in calcium associated with an estimated spike.</li>
+</ol>
 </div>
 <div id="references" class="section level3">
 <h3 class="hasAnchor">
 <a href="#references" class="anchor"></a>References</h3>
-<p>Chen YT, Jewell SW, Witten DM. (2021+) More powerful selective inference for the graph fused lasso</p>
-<p>Fithian W, Sun D, Taylor J. (2014) Optimal Inference After Model Selection. arXiv:1410.2597 [mathST].</p>
-<p>Hyun S, G’Sell M, Tibshirani RJ. (2018) Exact post-selection inference for the generalized lasso path. Electron J Stat.</p>
+<p>Chen T-W, Wardill TJ, Sun Y, Pulver SR, Renninger SL, Baohan A, Schreiter ER, Kerr RA, Orger MB, Jayaraman V, Looger LL, Svoboda K, Kim DS. Ultrasensitive fluorescent proteins for imaging neuronal activity. Nature. 2013;499(7458):295-300. <a href="doi:10.1038/nature12354" class="uri">doi:10.1038/nature12354</a></p>
+<p>Chen YT, Jewell SW, Witten DM. (2021) Quantifying uncertainty in spikes estimated from calcium imaging data. <a href="https://arxiv.org/abs/2103.07818">arXiv:2103.0781</a> [statME].</p>
 <p>Lee JD, Sun DL, Sun Y, Taylor JE. Exact post-selection inference, with application to the lasso. Ann Stat. 2016;44(3):907-927. <a href="doi:10.1214/15-AOS1371" class="uri">doi:10.1214/15-AOS1371</a></p>
+<p>Fithian W, Sun D, Taylor J. (2014) Optimal Inference After Model Selection. arXiv:1410.2597 [mathST].</p>
 </div>
   </div>
 

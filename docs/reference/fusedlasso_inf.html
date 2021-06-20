@@ -138,7 +138,9 @@ function in the <code>genlasso</code> package.</p>
   <span class='va'>sigma</span>,
   K <span class='op'>=</span> <span class='cn'>NULL</span>,
   c <span class='op'>=</span> <span class='cn'>NULL</span>,
-  early_stop <span class='op'>=</span> <span class='cn'>NULL</span>
+  early_stop <span class='op'>=</span> <span class='cn'>NULL</span>,
+  compute_ci <span class='op'>=</span> <span class='cn'>FALSE</span>,
+  alpha_level <span class='op'>=</span> <span class='fl'>0.05</span>
 <span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
@@ -181,6 +183,15 @@ It must be specified if method=="CC".</p></td>
       <td><p>Numeric; specify when the truncation set computation
 should be terminated. The default is NULL, which indicates infinity.</p></td>
     </tr>
+    <tr>
+      <th>compute_ci</th>
+      <td><p>Logical; the default is False. Specifying whether confidence intervals for \(\nu^{T}\beta\), the
+difference in means between the two estimated connected components, should be computed.</p></td>
+    </tr>
+    <tr>
+      <th>alpha_level</th>
+      <td><p>Numeric; parameter for the 1-<code>alpha_level</code> confidence interval, defeault to 0.05</p></td>
+    </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
@@ -194,6 +205,7 @@ should be terminated. The default is NULL, which indicates infinity.</p></td>
 <li><p><code>Naive</code> the naive p-value using a z-test</p></li>
 <li><p><code>Hyun</code> the p-value proposed in Hyun et al. (2018)</p></li>
 <li><p><code>hyun_set</code> the conditioning set of  Hyun et al. (2018) stored as <code>Intervals</code> class</p></li>
+<li><p><code>CI_result</code> confidence interval of level 1-<code>alpha_level</code> if <code>compute_ci=TRUE</code></p></li>
 </ul>
 
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>

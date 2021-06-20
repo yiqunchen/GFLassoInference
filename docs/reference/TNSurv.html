@@ -42,8 +42,7 @@
   
 
 <meta property="og:title" content="Survival function of truncated normal distribution. — TNSurv" />
-<meta property="og:description" content="Log-sum-exp operations are used to avoid underflows in the upper tail probability of
-a truncated normal distribution" />
+<meta property="og:description" content="Survival function of truncated normal distribution." />
 
 
 
@@ -121,19 +120,52 @@ a truncated normal distribution" />
     </div>
 
     <div class="ref-description">
-    <p>Log-sum-exp operations are used to avoid underflows in the upper tail probability of
-a truncated normal distribution</p>
+    <p>Survival function of truncated normal distribution.</p>
     </div>
 
     <pre class="usage"><span class='fu'>TNSurv</span><span class='op'>(</span><span class='va'>truncation</span>, <span class='va'>vTy</span>, <span class='va'>nu_norm</span>, <span class='va'>sig</span>, mu <span class='op'>=</span> <span class='fl'>0</span><span class='op'>)</span></pre>
 
+    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
+    <table class="ref-arguments">
+    <colgroup><col class="name" /><col class="desc" /></colgroup>
+    <tr>
+      <th>truncation</th>
+      <td><p>A data frame of truncation with 3 columns: min_mean, max_mean, and contained.
+Each row corresponds to a truncation interval with lower and upper limits specified by min_mean and max_mean,
+respectively. In addition, contained is binary-valued and indicates whether this interval is included
+in the final truncation set.</p></td>
+    </tr>
+    <tr>
+      <th>vTy</th>
+      <td><p>Numeric; the value to evaluate the survival function on</p></td>
+    </tr>
+    <tr>
+      <th>nu_norm</th>
+      <td><p>Numeric; part 1 of standard deviation</p></td>
+    </tr>
+    <tr>
+      <th>sig</th>
+      <td><p>Numeric; part 2 of standard deviation</p></td>
+    </tr>
+    <tr>
+      <th>mu</th>
+      <td><p>Numeric; mean of untruncated distribution, default to 0</p></td>
+    </tr>
+    </table>
 
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
     <p>Let \(X\) be a normal random variable with mean <code>mu</code> and standard deviation <code>sig*nu_norm</code>.
-Truncating \(X\) to the set \(df\) is equivalent to conditioning on \({X \in df}\).
-So this function returns \(P(|X| \ge v^{T}y | X \in df)\) .</p>
+This function returns \(P(X \ge v^{T}y | X \in \code{truncation)}\), where <code>truncation</code> is a subset of the real line.
+Log-sum-exp operations are used to avoid underflows in the upper tail probability of the truncated normal distribution.</p>
+<p>Input:</p>
 
+    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <pre class="examples"><div class='input'><span class='va'>truncation</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/data.frame.html'>data.frame</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/matrix.html'>matrix</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='op'>-</span><span class='fl'>2</span>,<span class='fl'>1</span>,<span class='fl'>0</span>,<span class='fl'>2</span><span class='op'>)</span>,byrow <span class='op'>=</span> <span class='cn'>T</span>,ncol<span class='op'>=</span><span class='fl'>2</span><span class='op'>)</span><span class='op'>)</span>
+<span class='fu'><a href='https://rdrr.io/r/base/colnames.html'>colnames</a></span><span class='op'>(</span><span class='va'>truncation</span><span class='op'>)</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"min_mean"</span>, <span class='st'>"max_mean"</span><span class='op'>)</span>
+<span class='va'>truncation</span><span class='op'>$</span><span class='va'>contained</span> <span class='op'>&lt;-</span> <span class='fl'>1</span>
+<span class='fu'>TNSurv</span><span class='op'>(</span><span class='va'>truncation</span>,vTy<span class='op'>=</span><span class='fl'>0</span>, nu_norm<span class='op'>=</span><span class='fl'>1</span>, sig<span class='op'>=</span><span class='fl'>1</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; [1] 0.6317075</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

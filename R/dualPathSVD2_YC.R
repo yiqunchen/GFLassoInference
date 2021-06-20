@@ -27,6 +27,7 @@
 #' @param cdtol Tolerance for cdtol; defaults to 1e-4
 #' @param do.gc internal garbage collection code
 #' @export
+#' @keywords internal
 dualpathSvd2_YC <- function(y, D, v, sigma = 1, approx=FALSE, maxsteps=2000, minlam=0,
                             rtol=1e-7, btol=1e-7, verbose=FALSE, object=NULL,
                             ctol=1e-10, cdtol=1e-4, do.gc=F){

@@ -1,16 +1,26 @@
-
-# ----- Truncated Normal Distribution -----
 #' Survival function of truncated normal distribution.
 #'
-#' Log-sum-exp operations are used to avoid underflows in the upper tail probability of
-#'  a truncated normal distribution
-#'
+#' @keywords internal
+#' @details
 #' Let \eqn{X} be a normal random variable with mean \code{mu} and standard deviation \code{sig*nu_norm}.
-#' Truncating \eqn{X} to the set \eqn{df} is equivalent to conditioning on \eqn{{X \in df}}.
-#' So this function returns \eqn{P(|X| \ge v^{T}y | X \in df)} .
+#' This function returns \eqn{P(X \ge v^{T}y | X \in \code{truncation)}}, where \code{truncation} is a subset of the real line.
+#' Log-sum-exp operations are used to avoid underflows in the upper tail probability of the truncated normal distribution.
 #'
-#'
-#'
+#' Input:
+#' @param truncation A data frame of truncation with 3 columns: min_mean, max_mean, and contained.
+#'  Each row corresponds to a truncation interval with lower and upper limits specified by min_mean and max_mean,
+#'  respectively. In addition, contained is binary-valued and indicates whether this interval is included
+#'  in the final truncation set.
+#' @param vTy Numeric; the value to evaluate the survival function on
+#' @param nu_norm Numeric; part 1 of standard deviation
+#' @param sig Numeric; part 2 of standard deviation
+#' @param mu Numeric; mean of untruncated distribution, default to 0
+#' @examples
+#' truncation <- data.frame(matrix(c(-2,1,0,2),byrow = T,ncol=2))
+#' colnames(truncation) <- c("min_mean", "max_mean")
+#' truncation$contained <- 1
+#' TNSurv(truncation,vTy=0, nu_norm=1, sig=1)
+#' @export
 TNSurv <- function(truncation, vTy, nu_norm, sig, mu = 0){
   n_intervals <- dim(truncation)[[1]]
   n1 = -Inf;

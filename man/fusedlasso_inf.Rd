@@ -13,7 +13,9 @@ fusedlasso_inf(
   sigma,
   K = NULL,
   c = NULL,
-  early_stop = NULL
+  early_stop = NULL,
+  compute_ci = FALSE,
+  alpha_level = 0.05
 )
 }
 \arguments{
@@ -37,6 +39,11 @@ It must be specified if method=="CC".}
 
 \item{early_stop}{Numeric; specify when the truncation set computation
 should be terminated. The default is NULL, which indicates infinity.}
+
+\item{compute_ci}{Logical; the default is False. Specifying whether confidence intervals for \eqn{\nu^{T}\beta}, the
+difference in means between the two estimated connected components, should be computed.}
+
+\item{alpha_level}{Numeric; parameter for the 1-\code{alpha_level} confidence interval, defeault to 0.05}
 }
 \value{
 Returns a list with elements:
@@ -49,6 +56,7 @@ Returns a list with elements:
 \item \code{Naive} the naive p-value using a z-test
 \item \code{Hyun} the p-value proposed in Hyun et al. (2018)
 \item \code{hyun_set} the conditioning set of  Hyun et al. (2018) stored as \code{Intervals} class
+\item \code{CI_result} confidence interval of level 1-\code{alpha_level} if \code{compute_ci=TRUE}
 }
 }
 \description{

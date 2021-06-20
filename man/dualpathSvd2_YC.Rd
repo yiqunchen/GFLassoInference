@@ -60,3 +60,4 @@ Note: the df estimates at each lambda_k can be thought of as the df for all
 solutions corresponding to lambda in (lambda_k,lambda_{k-1}), the open
 interval to the \emph{right} of the current lambda_k.
 }
+\keyword{internal}
