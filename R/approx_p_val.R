@@ -1,5 +1,5 @@
 #' Monte Carlo significance test for GFLasso, two sided-alternatives only
-#' keyword @internal
+#' keywords @internal
 test_gfl_approx <- function(y,
                             Dmat,
                             v,

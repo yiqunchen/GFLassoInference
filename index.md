@@ -17,7 +17,7 @@ library(PGInference)
 Double-dipping &mdash; or more formally, generating a hypothesis based on your data, and then testing the hypothesis on that same data &mdash; renders classical hypothesis tests (e.g., z-test or Wilcoxon-rank for a difference-in-means; and in general any standard hypothesis tests) invalid, in the sense that Type I error is not controlled.
 
 ### Link to additional resources
-* You can learn more about the technical details in our manuscript and in the [technical details section](https://yiqunchen.github.io/SpikeInference/articles/technical_details.html).
+* You can learn more about the technical details in our manuscript and in the [technical details section](https://yiqunchen.github.io/PGInference/articles/technical_details.html).
 * You can learn more about how to use our software in the  [tutorials section](https://yiqunchen.github.io/SpikeInference/articles/Tutorials.html).
 * Finally, code and steps to reproduce the figures in our manuscript can be found in the GitHub repo [https://github.com/yiqunchen/SpikeInference-experiments](https://github.com/yiqunchen/SpikeInference-experiments).
 
