@@ -184,7 +184,7 @@
 <h3 class="hasAnchor">
 <a href="#powerful-graph-fused-lasso-inference" class="anchor"></a>Powerful graph fused lasso inference</h3>
 <p>In this section, we demonstrate how to use our software to obtain <span class="math inline">\(p\)</span>-values and confidence intervals for the difference in means of connected components 1 and 3.</p>
-<p>Recall that for a given <span class="math inline">\(\hat\tau_j\)</span>, our proposed <span class="math inline">\(p\)</span>-value for testing the null hypothesis <span class="math inline">\(H_0: \nu^\top \beta = 0\)</span> can be expressed as <span class="math inline">\(\mathbb{P}\left(|\phi| \geq |\nu^\top y| \;\middle|\; \phi \in \mathcal{S}_{C_1,C_2},\)</span> where <span class="math inline">\(\mathcal{S}_{C_1,C_2}\)</span> is the set of values <span class="math inline">\(\phi\)</span> such that performing the graph fused lasso on the perturbed dataset <span class="math inline">\(y'(\phi)\)</span> leads to a set of connected components that include <span class="math inline">\(\hat{C}_1\)</span> and <span class="math inline">\(\hat{C}_2\)</span> (see details in the <a href="https://yiqunchen.github.io/PGInference/articles/technical_details.html">technical details section</a>).</p>
+<p>Recall that for a given <span class="math inline">\(\hat\tau_j\)</span>, our proposed <span class="math inline">\(p\)</span>-value for testing the null hypothesis <span class="math inline">\(H_0: \nu^\top \beta = 0\)</span> can be expressed as <span class="math inline">\(\mathbb{P}\left(|\phi| \geq |\nu^\top y| \;\middle|\; \phi \in \mathcal{S}_{C_1,C_2}\right),\)</span> where <span class="math inline">\(\mathcal{S}_{C_1,C_2}\)</span> is the set of values <span class="math inline">\(\phi\)</span> such that performing the graph fused lasso on the perturbed dataset <span class="math inline">\(y'(\phi)\)</span> leads to a set of connected components that include <span class="math inline">\(\hat{C}_1\)</span> and <span class="math inline">\(\hat{C}_2\)</span> (see details in the <a href="https://yiqunchen.github.io/PGInference/articles/technical_details.html">technical details section</a>).</p>
 <p>The code below demonstrates how to use the function <code>fusedlasso_inf</code>, which estimates the connected components with <span class="math inline">\(K\)</span>-step dual-path algorithm <em>and</em> performs inference on the specified two connected components based on the input data. After performing inference with <span class="math inline">\(K=13\)</span> in this example, we use the <code>summary</code> method to get a summary (in the form of a data frame) of the results.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">result_demo</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/fusedlasso_inf.html">fusedlasso_inf</a></span><span class="op">(</span>y<span class="op">=</span><span class="va">y0</span>, D<span class="op">=</span><span class="va">Dmat</span>, c1<span class="op">=</span><span class="fl">1</span>, c2<span class="op">=</span><span class="fl">3</span>, method<span class="op">=</span><span class="st">"K"</span>, sigma<span class="op">=</span><span class="va">sigma</span>, K<span class="op">=</span><span class="va">K_init</span>,
@@ -192,36 +192,12 @@ compute_ci <span class="op">=</span> <span class="cn">TRUE</span><span class="op
 <span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">result_demo</span><span class="op">)</span>
 <span class="co">#&gt;   cluster_1 cluster_2 diff_in_means    pval_c1c2 pval_hyun       LCB       UCB</span>
 <span class="co">#&gt; 1         1         3     -3.152508 1.430406e-12 0.2545821 -3.866876 -2.434958</span></code></pre></div>
-<p>We see that because <span class="math inline">\(p_{Hyun}\)</span> conditions on too much information, its power is extremely low, so that the null hypothesis cannot be rejected. By contrast, <span class="math inline">\(p_{C_1,C_2}\)</span> can easily this null hypothesis.</p>
+<p>We see that because <span class="math inline">\(p_{Hyun}\)</span> conditions on too much information, its power is extremely low, and the null hypothesis cannot be rejected at level 0.05 (<span class="math inline">\(p_{Hyun}=0.25\)</span>). By contrast, <span class="math inline">\(p_{C_1,C_2}\)</span> can easily this null hypothesis (<span class="math inline">\(p_{C_1,C_2}&lt;0.001\)</span>).</p>
 </div>
 <div id="miscellaneous-functions" class="section level3">
 <h3 class="hasAnchor">
 <a href="#miscellaneous-functions" class="anchor"></a>Miscellaneous functions</h3>
-<p>In addition to the aforementioned key functions, the package also includes the following helper functions: <code>construct_v</code> and <code>estimate_spike_by_firing_rate</code>.</p>
-<div id="construct_v" class="section level4">
-<h4 class="hasAnchor">
-<a href="#construct_v" class="anchor"></a>construct_v</h4>
-<p>The function <code>construct_v</code> generates the contrast vector <span class="math inline">\(\nu\)</span> for the null hypothesis <span class="math inline">\(H_0:\nu^\top c = 0\)</span>. We will demonstrate below that <span class="math inline">\(\nu^\top c\)</span> is indeed the change in calcium in the neighborhood of a given spike <span class="math inline">\(\hat\tau_j\)</span>. We consider the case where there is no spike, i.e., the calcium is decaying exponentially, and we would expect <span class="math inline">\(\nu^\top c=0\)</span>. In the example below, we set <span class="math inline">\(c_1 = 3\)</span>, <span class="math inline">\(c_t = 0.98 c_{t-1}, \; t=2,\ldots, 50\)</span>, <span class="math inline">\(\hat\tau_j = 20\)</span>, and <span class="math inline">\(h=5\)</span>.</p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">gam</span> <span class="op">&lt;-</span> <span class="fl">0.98</span>
-<span class="va">T_length</span> <span class="op">&lt;-</span> <span class="fl">50</span>
-<span class="va">calcium</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html">rep</a></span><span class="op">(</span><span class="fl">3</span> <span class="op">*</span> <span class="va">gam</span> <span class="op">^</span><span class="op">(</span><span class="fl">0</span><span class="op">:</span><span class="op">(</span><span class="va">T_length</span> <span class="op">-</span> <span class="fl">1</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>
-<span class="va">thj</span> <span class="op">&lt;-</span> <span class="fl">20</span>
-<span class="va">h</span> <span class="op">&lt;-</span> <span class="fl">5</span></code></pre></div>
-<p>We see that <span class="math inline">\(\nu^\top c\)</span> indeed evaluates to 0, up to machine precision.</p>
-</div>
-<div id="estimate_spike_by_firing_rate" class="section level4">
-<h4 class="hasAnchor">
-<a href="#estimate_spike_by_firing_rate" class="anchor"></a>estimate_spike_by_firing_rate</h4>
-<p>We have taken <span class="math inline">\(\lambda\)</span> to be known in this tutorial. Choosing an appropriate <span class="math inline">\(\lambda\)</span> value is critical to the quality of estimated spikes. The function <code>estimate_spike_by_firing_rate</code> allows us to specify a target firing rate, and then to find the value of <span class="math inline">\(\lambda\)</span> that yields a number of estimated spikes that is close to that target firing rate.</p>
-<p>In the example below, we simulate from an AR-1 model with firing rate 0.05, i.e., we expect to have 5 spikes per 100 timesteps on average.</p>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">gam</span> <span class="op">&lt;-</span> <span class="fl">0.98</span>
-<span class="va">T_length</span> <span class="op">&lt;-</span> <span class="fl">1000</span>
-<span class="va">firing_rate</span> <span class="op">&lt;-</span> <span class="fl">0.05</span>
-<span class="va">target_rate</span> <span class="op">&lt;-</span> <span class="fl">0.05</span>
-<span class="va">sigma</span> <span class="op">&lt;-</span> <span class="fl">0.1</span></code></pre></div>
-</div>
+<p>In addition to the aforementioned key functions, the package also includes the following helper functions: TBA</p>
 </div>
   </div>
 
