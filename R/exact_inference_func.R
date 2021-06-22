@@ -174,6 +174,7 @@ fusedlasso_inf <- function(y, D, c1, c2, method, sigma, K=NULL, c=NULL, early_st
                                          CI_result = CI_result,
                                          c1 = c1,
                                          c2 = c2,
+                                         call = match.call(),
                                          beta_hat = all_beta_hat[,ncol(all_beta_hat)]))
 
 

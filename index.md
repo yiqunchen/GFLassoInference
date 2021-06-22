@@ -22,7 +22,7 @@ To tackle this problem, Hyun et al. (2018) proposed the $p$-value $p_{\text{Hyun
 
 Building on the low power observation, we propose an alternative $p$-value $p_{C_1,C_2}$ which conditions *only on the presence of two connected components being tested*. The resulting $p$-value will control the selective Type I error, while having higher power than $p_{\text{Hyun}}$. We demonstrate the increase in power in the figure below: in the leftmost panel, we plot the piecewise mean structure of the signal we are simulating from; in the middle panel, we see that under the null hypothesis, both $p_{\text{Hyun}}$ and $p_{C_1,C_2}$ control the selective Type I error, but the z-test $p_{\text{Naive}} = \mathbb{P}(|\nu^\top Y|\geq |\nu^\top y|)$ leads to inflated selective Type I error; finally, we demonstrate that $p_{C_1,C_2}$ has higher power than $p_{\text{Hyun}}$ across all values of the effect size ($|\nu^\top\beta|/\sigma$) considered. 
 
-![](../man/figures/combined_two_d.png)
+![Figure 1: (a): The piecewise mean structure of $\beta$ according to a two-dimensional grid graph. (b): Under the null hypothesis, both $p_{\text{Hyun}}$ and $p_{C_1,C_2}$ control the selective Type I error, but the z-test $p_{\text{Naive}} = \mathbb{P}(|\nu^\top Y|\geq |\nu^\top y|)$ leads to inflated selective Type I error. (c): For a given value of the effect size ($|\nu^\top\beta|/\sigma$), $p_{C_1,C_2}$ has higher power than $p_{\text{Hyun}}$. Power for both increases as a function of the effect size.](../man/figures/combined_two_d.png)
 
 
 ### Link to additional resources
