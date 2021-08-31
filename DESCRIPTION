@@ -1,4 +1,4 @@
-Package: PGInference
+Package: GFLassoInference
 Title: Powerful Graph fused lasso Inference 
 Version: 1.0
 Maintainer: Yiqun Chen <yiqunc@uw.edu>

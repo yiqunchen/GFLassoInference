@@ -40,7 +40,7 @@ test_gfl_approx <- function(y,
     }
 
     new_cluster <- as.factor(y_hat_fused_lasso$beta[,K_init])
-    segment_in_cluster[j] <- PGInference::check_segment_in_model(segment_list, new_cluster)
+    segment_in_cluster[j] <- GFLassoInference::check_segment_in_model(segment_list, new_cluster)
 
   }
 

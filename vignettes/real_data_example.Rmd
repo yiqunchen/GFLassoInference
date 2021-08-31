@@ -22,7 +22,7 @@ require(maps)
 require(maptools)
 require(RColorBrewer)
 library(latex2exp)
-require(PGInference)
+require(GFLassoInference)
 require(SpikeInference)
 require(RCurl)
 require(ggplot2)
@@ -64,7 +64,7 @@ fit_calcium <- spike_estimates(calcium_1[1:T_end,curr_cell_num]+beta_0_star,
 
 We will use $h=20$ and estimate variance using $\hat{\sigma}^2 = \frac{1}{T-1}(y_t-\hat{c}_t)^2$.
 
-```{r }
+```{r }  
 h <- 20
 sigma_2_hat <- var(calcium_1[1:T_end,curr_cell_num]+beta_0_star-fit_calcium)
 

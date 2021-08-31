@@ -14,11 +14,11 @@ knitr::opts_chunk$set(
 )
 ```
 
-In this tutorial, we demonstrate basic use of the `PGInference` package. 
+In this tutorial, we demonstrate basic use of the `GFLassoInference` package. 
 
 First we load relevant packages:
 ```{r,message = FALSE,warning=FALSE}
-require(PGInference)
+require(GFLassoInference)
 require(lattice)
 require(genlasso)
 require(ggplot2)
@@ -124,7 +124,7 @@ In this section, we demonstrate how to use our software to obtain $p$-values and
 
 Recall that for a given $\hat\tau_j$, our proposed $p$-value for testing the null hypothesis $H_0: \nu^\top \beta = 0$ can be expressed as 
 $\mathbb{P}\left(|\phi| \geq |\nu^\top y| \;\middle|\; \phi \in \mathcal{S}_{C_1,C_2}\right),$
-where $\mathcal{S}_{C_1,C_2}$ is the set of values $\phi$ such that performing the graph fused lasso on the perturbed dataset $y'(\phi)$ leads to a set of connected components that include $\hat{C}_1$ and $\hat{C}_2$ (see details in the [technical details section](https://yiqunchen.github.io/PGInference/articles/technical_details.html)). 
+where $\mathcal{S}_{C_1,C_2}$ is the set of values $\phi$ such that performing the graph fused lasso on the perturbed dataset $y'(\phi)$ leads to a set of connected components that include $\hat{C}_1$ and $\hat{C}_2$ (see details in the [technical details section](https://yiqunchen.github.io/GFLassoInference/articles/technical_details.html)). 
 
 The code below demonstrates how to use the function `fusedlasso_inf`, which estimates the connected components with $K$-step dual-path algorithm *and* performs inference on the specified two connected components based on the input data. After performing inference with $K=13$ in this example, we use the `summary` method to get a summary (in the form of a data frame) of the results.
 
