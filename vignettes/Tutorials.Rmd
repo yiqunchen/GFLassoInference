@@ -14,7 +14,7 @@ knitr::opts_chunk$set(
 )
 ```
 
-In this tutorial, we demonstrate basic use of the `GFLassoInference` package. 
+In this tutorial, we how to use the `GFLassoInference` package. 
 
 First we load relevant packages:
 ```{r,message = FALSE,warning=FALSE}
@@ -25,7 +25,7 @@ require(ggplot2)
 require(latex2exp)
 ```
 
-We first construct a signal that is piecewise constant on an eight by eight grid graph, with three true connected components of $\beta$, which take on values of $-3$, $0$, and $3$, respectively. 
+We first construct a signal that is piecewise constant on an eight by eight grid graph, with three true piecewise constant regions of $\beta$, which take on values of $-3$, $0$, and $3$, respectively. For convenience, we will refer to the three regions of $\beta$ as $C_1$, $C_2$, and $C_3$.
 
 ```{r fig.align="center",  warning = FALSE, fig.height = 5, fig.width = 4}
 lev1 <- 0 # mean for group 1
@@ -56,13 +56,13 @@ ggplot(A_true_value_plot, aes(x=Var1, y=Var2, fill = z)) +
   scale_x_discrete(expand = c(0,0)) +
   scale_y_discrete(expand = c(0,0)) +
   annotate("text",x = 2 ,y = 2, label = TeX("$C_1$"),parse=TRUE,size=6)+
-  annotate("text",x = 7 ,y = 7, label = TeX("$C_3$"),parse=TRUE,size=6)+
-  annotate("text",x = 4.5 ,y = 4.5, label = TeX("$C_2$"),parse=TRUE,size=6)+
+  annotate("text",x = 7 ,y = 7, label = TeX("$C_2$"),parse=TRUE,size=6)+
+  annotate("text",x = 4.5 ,y = 4.5, label = TeX("$C_3$"),parse=TRUE,size=6)+
   guides(fill = guide_colourbar(barwidth = 10, barheight = 1))
 ```
 
 We generated data on this grid according to the model
-$Y_i = \beta_i + \epsilon_i, \epsilon_i \overset{i.i.d.}{\sim} N(0, \sigma^2), \; i = 1,\ldots, 64$ and display the observation below.
+$Y_i = \beta_j + \epsilon_j, \epsilon_j \overset{i.i.d.}{\sim} N(0, \sigma^2), \; j = 1,\ldots, 64$ and display the observation below.
 ```{r fig.align="center",  fig.height = 5, fig.width = 4, warning = FALSE}
 set.seed(2005)
 A.noisy <- A + rnorm(nn^2,mean=0,sd=sigma)
@@ -89,7 +89,7 @@ ggplot(A_noisy_value_plot, aes(Var1, Var2, fill = z)) +
 ```
 
 ### The graph fused lasso estimate
-In the code below, we use the `fusedlasso` function in the `genlasso` package to explore the estimate signals using the graph fused lasso. We display the estimate $\hat{\beta}$ after 13 steps in the figure below. Note that on this particular dataset, $K=13$ corresponds to $\lambda\in(4.73,3.42)$.
+In the code below, we use the `fusedlasso` function in the `genlasso` package to explore the estimate signals using the graph fused lasso. We display the solution $\hat{\beta}$ after $K=13$ steps in the dual-path algorithm in the figure below. There are exactly three connected components in $\hat{\beta}$ (referred to as $\hat{C}_1$,$\hat{C}_2$, and $\hat{C}_3$ for convenience), and they perfectly recover the underlying piecewise constant structure of $\beta$.
 ```{r fig.align="center",  fig.height = 5, fig.width = 4, warning = FALSE}
 K_init = 13
 complete_sol <- fusedlasso(y=y0,D=Dmat,maxsteps=50)
@@ -113,18 +113,15 @@ ggplot(A_estimate_value_plot, aes(Var1, Var2, fill = z)) +
   scale_x_discrete(expand = c(0,0)) +
   scale_y_discrete(expand = c(0,0))+
     annotate("text",x = 2 ,y = 2, label = TeX("$\\hat{C}_1$"),parse=TRUE,size=6)+
-  annotate("text",x = 7 ,y = 7, label = TeX("$\\hat{C}_3$"),parse=TRUE,size=6)+
-  annotate("text",x = 4.5 ,y = 4.5, label = TeX("$\\hat{C}_2$"),parse=TRUE,size=6)+
+  annotate("text",x = 7 ,y = 7, label = TeX("$\\hat{C}_2$"),parse=TRUE,size=6)+
+  annotate("text",x = 4.5 ,y = 4.5, label = TeX("$\\hat{C}_3$"),parse=TRUE,size=6)+
   guides(fill = guide_colourbar(barwidth = 10, barheight = 1))
 ```
 
 
 ### Powerful graph fused lasso inference 
-In this section, we demonstrate how to use our software to obtain $p$-values and confidence intervals for the difference in means of connected components 1 and 3.
-
-Recall that for a given $\hat\tau_j$, our proposed $p$-value for testing the null hypothesis $H_0: \nu^\top \beta = 0$ can be expressed as 
-$\mathbb{P}\left(|\phi| \geq |\nu^\top y| \;\middle|\; \phi \in \mathcal{S}_{C_1,C_2}\right),$
-where $\mathcal{S}_{C_1,C_2}$ is the set of values $\phi$ such that performing the graph fused lasso on the perturbed dataset $y'(\phi)$ leads to a set of connected components that include $\hat{C}_1$ and $\hat{C}_2$ (see details in the [technical details section](https://yiqunchen.github.io/GFLassoInference/articles/technical_details.html)). 
+In this section, we demonstrate how to use our software to obtain $p$-values and confidence intervals for the difference in means across the pair of estimated connected components $\hat{C}_1$ and $\hat{C}_3$.
+Recall that for a given pair of estimated connected components, our proposed $p$-value $p_{C_1,C_2}$ can be expressed as  $\mathbb{P}\left(|\phi| \geq |\nu^\top y| \;\middle|\; \phi \in \mathcal{S}_{C_1,C_2}\right),$ where $\mathcal{S}_{C_1,C_2}$ is the set of values $\phi$ such that performing the graph fused lasso on the perturbed dataset $y'(\phi)$ that yields $\hat{C}_1$ and $\hat{C}_3$ (see details in the [technical details section](https://yiqunchen.github.io/GFLassoInference/articles/technical_details.html)). 
 
 The code below demonstrates how to use the function `fusedlasso_inf`, which estimates the connected components with $K$-step dual-path algorithm *and* performs inference on the specified two connected components based on the input data. After performing inference with $K=13$ in this example, we use the `summary` method to get a summary (in the form of a data frame) of the results.
 
@@ -137,5 +134,3 @@ summary(result_demo)
 We see that because $p_{Hyun}$ conditions on too much information, its power is extremely low, and the null hypothesis cannot be rejected at level 0.05 ($p_{Hyun}=0.25$). By contrast, $p_{C_1,C_2}$ can easily this null hypothesis ($p_{C_1,C_2}<0.001$).
 
 ### Miscellaneous functions
-In addition to the aforementioned key functions, the package also includes the following helper functions: 
-TBA
