@@ -176,8 +176,6 @@ calc_p_value_safer <- function(truncation, vTy, nu_norm, sig, mu = 0, two_sided 
             part_b=0}
             if(abs(part_b)<=1e-20){part_b=0}
           }
-
-
           arg2 = log_subtract(part_a,part_b);
           n1 = log_sum_exp(n1, arg2);
         }
