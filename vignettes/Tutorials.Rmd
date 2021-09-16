@@ -25,20 +25,22 @@ require(ggplot2)
 require(latex2exp)
 ```
 
-We first construct a signal that is piecewise constant on an eight by eight grid graph, with three true piecewise constant regions of $\beta$, which take on values of $-3$, $0$, and $3$, respectively. For convenience, we will refer to the three regions of $\beta$ as $C_1$, $C_2$, and $C_3$.
-
+We first construct the signal $\beta$ that is piecewise constant on an 8 by 8 grid graph, with three true piecewise constant segments which take on values $-3$, $0$, and $3$. We will also use the `getD2d` function from the `genlasso` package to create the penalty matrix $D$ that corresponds to this grid graph.
 ```{r fig.align="center",  warning = FALSE, fig.height = 5, fig.width = 4}
 lev1 <- 0 # mean for group 1
 lev2 <- 3 # mean (absolute value) for group 2/3
 sigma <- 1 # level of noise
 nn <- 8 # grid size
-Dmat <- graph2D_Dmat(nn^2) # generate D matrix for the 2D fused lasso
+Dmat <- genlasso::getD2d(nn, nn)
 # Create the underlying signal
 A <- matrix(lev1, ncol=nn, nrow = nn)
 A[1:round(nn/3),1:round(nn/3)] <- 1*lev2
 A[(nn-2):(nn),(nn-2):(nn)] <- -1*lev2
-
-A_true_value_plot <- data.frame(expand.grid(c(1:8),c(1:8)), z = c(A))
+beta <- c(t(A)) # flatten the matrix by row
+```
+The code below visualizes the signal $\beta$. For convenience, we will refer to the three segments of $\beta$ as $C_1$, $C_2$, and $C_3$ (colored in magenta, green, and grey in the figure below).
+```{r fig.align="center",  warning = FALSE, fig.height = 5, fig.width = 4}
+A_true_value_plot <- data.frame(expand.grid(c(1:8),c(1:8)), z = beta)
 ggplot(A_true_value_plot, aes(x=Var1, y=Var2, fill = z)) +
   geom_tile() +
   xlab("") + ylab("") +
@@ -61,13 +63,16 @@ ggplot(A_true_value_plot, aes(x=Var1, y=Var2, fill = z)) +
   guides(fill = guide_colourbar(barwidth = 10, barheight = 1))
 ```
 
-We generated data on this grid according to the model
-$Y_i = \beta_j + \epsilon_j, \epsilon_j \overset{i.i.d.}{\sim} N(0, \sigma^2), \; j = 1,\ldots, 64$ and display the observation below.
+We draw a sample `y` from the model $Y_i = \beta_j + \epsilon_j, \epsilon_j \overset{i.i.d.}{\sim} N(0, 1), \; j = 1,\ldots, 64$. 
 ```{r fig.align="center",  fig.height = 5, fig.width = 4, warning = FALSE}
 set.seed(2005)
 A.noisy <- A + rnorm(nn^2,mean=0,sd=sigma)
-y0 <- do.call(c,lapply(1:nrow(A.noisy),function(irow)A.noisy[irow,]))
-A_noisy_value_plot <- data.frame(expand.grid(c(1:8),c(1:8)), z = c(A.noisy))
+y <- c(t(A.noisy))
+```
+
+The code below displays the observation `y`.
+```{r fig.align="center",  fig.height = 5, fig.width = 4, warning = FALSE}
+A_noisy_value_plot <- data.frame(expand.grid(c(1:8),c(1:8)), z = c(t(A.noisy)))
 ggplot(A_noisy_value_plot, aes(Var1, Var2, fill = z)) +
   geom_tile() +
   xlab("") + ylab("") +
@@ -88,14 +93,26 @@ ggplot(A_noisy_value_plot, aes(Var1, Var2, fill = z)) +
   guides(fill = guide_colourbar(barwidth = 10, barheight = 1))
 ```
 
-### The graph fused lasso estimate
-In the code below, we use the `fusedlasso` function in the `genlasso` package to explore the estimate signals using the graph fused lasso. We display the solution $\hat{\beta}$ after $K=13$ steps in the dual-path algorithm in the figure below. There are exactly three connected components in $\hat{\beta}$ (referred to as $\hat{C}_1$,$\hat{C}_2$, and $\hat{C}_3$ for convenience), and they perfectly recover the underlying piecewise constant structure of $\beta$.
+### The graph fused lasso estimator
+In the code below, we use the `fusedlasso` function (see [link](https://rdrr.io/cran/genlasso/man/fusedlasso.html) for the detailed documentations for the `fusedlasso` function) in the `genlasso` package to obtain the graph fused lasso estimator $\hat\beta$ on data `y`. In this example, we apply the dual path algorithm on `y` with $K=13$, which yields three estimated connected components. 
 ```{r fig.align="center",  fig.height = 5, fig.width = 4, warning = FALSE}
-K_init = 13
-complete_sol <- fusedlasso(y=y0,D=Dmat,maxsteps=50)
-cat("lambda range", complete_sol$lambda[K_init-1],complete_sol$lambda[K_init],"\n")
-beta_hat <- complete_sol$beta[,13]
-A_estimate_value_plot <- data.frame(expand.grid(c(1:8),c(1:8)), z = c(beta_hat))
+K = 13
+complete_sol <- genlasso::fusedlasso(y=y,D=Dmat,maxsteps=K+1)
+beta_hat <- complete_sol$beta[,K+1]
+#  estimated connected components
+estimated_CC <- complete_sol$pathobjs$i
+estimated_CC
+```
+
+There are exactly three estimated connected components in $\hat{\beta}$ (referred to as $\hat{C}_1$,$\hat{C}_2$, and $\hat{C}_3$ for convenience). In this case, the fused lasso estimator with $K=13$ perfectly recover the underlying piecewise constant segments of $\beta$, where $\hat{C}_1$, $\hat{C}_2$, and $\hat{C}_3$ correspond to the segments of $\beta$ with mean -3, 0, and 3, respectively.
+
+```{r fig.align="center",  fig.height = 5, fig.width = 4, warning = FALSE}
+table(estimated_CC,beta)
+```
+
+The code below displays $\hat\beta$ and the estimated connected components.
+```{r fig.align="center",  fig.height = 5, fig.width = 4, warning = FALSE}
+A_estimate_value_plot <- data.frame(expand.grid(c(1:8),c(1:8)), z = c(t(beta_hat)))
 ggplot(A_estimate_value_plot, aes(Var1, Var2, fill = z)) +
   geom_tile() +
   xlab("") + ylab("") +
@@ -115,22 +132,19 @@ ggplot(A_estimate_value_plot, aes(Var1, Var2, fill = z)) +
     annotate("text",x = 2 ,y = 2, label = TeX("$\\hat{C}_1$"),parse=TRUE,size=6)+
   annotate("text",x = 7 ,y = 7, label = TeX("$\\hat{C}_2$"),parse=TRUE,size=6)+
   annotate("text",x = 4.5 ,y = 4.5, label = TeX("$\\hat{C}_3$"),parse=TRUE,size=6)+
-  guides(fill = guide_colourbar(barwidth = 10, barheight = 1))
+  guides(fill = guide_colourbar(barwidth = 15, barheight = 1))
 ```
 
+### Graph Fused Lasso Inference 
+In this section, we demonstrate how to use our software to obtain $p$-values and confidence intervals for the difference in means across a pair of estimated connected components. We will use $\hat{C}_1(y)$ (lower left) and $\hat{C}_3(y)$ (middle) as an example. Recall that for a given pair of estimated connected components, our proposed $p$-value $p_{\hat{C}_1,\hat{C}_2}$ can be expressed as  $\mathbb{P}\left(|\phi| \geq |\nu^\top y| \;\middle|\; \phi \in \mathcal{S}_{\hat{C}_1,\hat{C}_2}\right),$ where $\mathcal{S}_{\hat{C}_1,\hat{C}_2}$ is the set of values $\phi$ such that performing the graph fused lasso on the perturbed dataset $y'(\phi)$ that yields $\hat{C}_1(y)$ and $\hat{C}_3(y)$ (see details in the [technical details section](https://yiqunchen.github.io/GFLassoInference/articles/technical_details.html)). 
 
-### Powerful graph fused lasso inference 
-In this section, we demonstrate how to use our software to obtain $p$-values and confidence intervals for the difference in means across the pair of estimated connected components $\hat{C}_1$ and $\hat{C}_3$.
-Recall that for a given pair of estimated connected components, our proposed $p$-value $p_{C_1,C_2}$ can be expressed as  $\mathbb{P}\left(|\phi| \geq |\nu^\top y| \;\middle|\; \phi \in \mathcal{S}_{C_1,C_2}\right),$ where $\mathcal{S}_{C_1,C_2}$ is the set of values $\phi$ such that performing the graph fused lasso on the perturbed dataset $y'(\phi)$ that yields $\hat{C}_1$ and $\hat{C}_3$ (see details in the [technical details section](https://yiqunchen.github.io/GFLassoInference/articles/technical_details.html)). 
-
-The code below demonstrates how to use the function `fusedlasso_inf`, which estimates the connected components with $K$-step dual-path algorithm *and* performs inference on the specified two connected components based on the input data. After performing inference with $K=13$ in this example, we use the `summary` method to get a summary (in the form of a data frame) of the results.
+The code below demonstrates how to use the function `fusedlasso_inf`, which performs inference on the specified two estimated connected components. The connected components are numbered as per `estimated_CC`, i.e., the results of the `fusedlasso` function of the `genlasso` package. After performing inference with $K=13$ in this example, we use the `summary` method to get a summary (in the form of a data frame) of the results. 
 
 ```{r}
-result_demo <- fusedlasso_inf(y=y0, D=Dmat, c1=1, c2=3, method="K", sigma=sigma, K=K_init,
-compute_ci = TRUE) 
+result_demo <- fusedlasso_inf(y=y, D=Dmat, c1=1, c2=3, method="K", sigma=sigma, K=K,
+compute_ci = TRUE, alpha_level = 0.05) 
 summary(result_demo)
 ```
 
-We see that because $p_{Hyun}$ conditions on too much information, its power is extremely low, and the null hypothesis cannot be rejected at level 0.05 ($p_{Hyun}=0.25$). By contrast, $p_{C_1,C_2}$ can easily this null hypothesis ($p_{C_1,C_2}<0.001$).
+We now have the the difference in means, i.e., $(\sum_{j \in \hat{C}_1} y_j)/|\hat{C}_1| -(\sum_{j \in \hat{C}_3} y_j)/|\hat{C}_3|$ (`test_stats`), $p_{Hyun}$ (`pval_hyun`), $p_{\hat{C}_1,\hat{C}_2}$ (`pval_c1c2`), and accompanying $(1-\alpha)$ confidence intervals (`[LCB,UCB]`). Because $p_{Hyun}$ conditions on too much information, the test based on  $p_{Hyun}$ has low power cannot reject $H_0$ at level $\alpha=0.05$ ($p_{Hyun}=0.25$). By contrast, the test based on $p_{\hat{C}_1,\hat{C}_2}$ can easily this null hypothesis ($p_{\hat{C}_1,\hat{C}_2}<0.001$).
 
-### Miscellaneous functions

@@ -23,6 +23,13 @@ sparse_svdsolve <- function(A,b, rtol=1e-7) {
 }
 
 
+#' Utility function for creating the penalty matrix D that corresponds to a chain graph of length n
+#' @keywords internal
+#' @param n: length of the chain graph
+#' @return An (n-1)x(n) penalty matrix D
+#' @examples
+#' n <- 10
+#' D_1d <- dual1d_Dmat(n)
 #' @export
 dual1d_Dmat = function(m){
   D = matrix(0, nrow = m-1, ncol = m)
@@ -35,6 +42,7 @@ dual1d_Dmat = function(m){
 
 
 # Makes a D matrix for a matrix that is stacked as rows
+#' @keywords internal
 #' @export
 graph2D_Dmat = function(m){
 
@@ -153,6 +161,7 @@ Seq = function(a,b,by) {
   else return(integer(0))
 }
 
+#' @keywords internal
 #' @details
 #' This model takes in
 #' 1. @new_cluster new cluster assignment
@@ -181,6 +190,7 @@ check_segment_in_model <- function(old_segment, new_cluster){
   }
   return(TRUE)
 }
+
 
 #' @export
 getadjmat.from.Dmat = function(Dmat){
@@ -344,5 +354,4 @@ PolyInt_G_free <- function(y, v, Gy, Gv, sigma,
   }
   return(list(vlo=vlo,vup=vup,sd=sd,z=z))
 }
-
 

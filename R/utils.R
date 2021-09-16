@@ -20,9 +20,9 @@
 #' summary(result_demo)
 #' @export
 summary.fusedlasso_inf <- function(object, ...){
-  result <- data.frame(cluster_1 = object$c1,
-                       cluster_2 = object$c2,
-                       diff_in_means = object$test_stats,
+  result <- data.frame(CC_1 = object$c1,
+                       CC_2 = object$c2,
+                       test_stats = object$test_stats,
                        pval_c1c2 = object$Union,
                        pval_hyun = object$Hyun,
                        LCB = ifelse(is.null(object$CI_result[1]),NA,object$CI_result[1]),

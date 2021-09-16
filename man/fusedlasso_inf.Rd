@@ -12,19 +12,19 @@ fusedlasso_inf(
   method,
   sigma,
   K = NULL,
-  c = NULL,
+  L = NULL,
   early_stop = NULL,
   compute_ci = FALSE,
   alpha_level = 0.05
 )
 }
 \arguments{
-\item{y}{Numeric vector; \eqn{p} dimensional observed data}
+\item{y}{Numeric vector; \eqn{n} dimensional observed data}
 
-\item{D}{Numeric matrix; \eqn{m} by \eqn{p} penalty matrix, i.e.,
+\item{D}{Numeric matrix; \eqn{m} by \eqn{n} penalty matrix, i.e.,
 the oriented incidence matrix over the underlying graph}
 
-\item{c1, c2}{Integers selecting the two clusters to test, as indexed by the results of
+\item{c1, c2}{Integers selecting the two connected components to test, as indexed by the results of
 \code{genlasso::fusedlasso}.}
 
 \item{method}{One of "K" or "CC", which indicates which conditioning set to use}
@@ -34,7 +34,7 @@ the oriented incidence matrix over the underlying graph}
 \item{K}{Integer; number of steps to run the dual-path algorithm.
 It must be specified if method=="K".}
 
-\item{c}{Integer; the targeted number of connected components.
+\item{L}{Integer; the targeted number of connected components.
 It must be specified if method=="CC".}
 
 \item{early_stop}{Numeric; specify when the truncation set computation
@@ -72,10 +72,10 @@ output of the after the dual-path algorithm yields c connected components in the
 
 Input:
 
-Consider the generative model \eqn{Y_t = \beta_t + \epsilon_t, \epsilon_t \sim N(0, \sigma^2)}, where
+Consider the generative model \eqn{Y_j = \beta_j + \epsilon_j, \epsilon_j \sim N(0, \sigma^2). j=1,...,n}, where
 the underlying signal \eqn{\beta} is assumed to be piecewise constant with respect to an underlying
 graph. The fused lasso estimate minimizes the following objective function
-\deqn{minimize_{\beta} \frac{1}{2} \sum_{i=1}^{p} ( y_i - \beta_i )^2 + \lambda \sum_{(i,j)\in E}|\beta_i-\beta_j|,}
+\deqn{minimize_{\beta} \frac{1}{2} \sum_{j=1}^{n} ( y_j - \beta_j )^2 + \lambda \sum_{(i,j)\in E}|\beta_i-\beta_j|,}
 where E is the edge set of the underlying graph. The solution \eqn{\hat{\beta}} can then be
 segment into connected components; that is, the set of \eqn{\hat{\beta}} that takes on the
 same value, and are connected in the original graph.
@@ -85,10 +85,10 @@ are equal; or equivalently, the null hypothesis of the form \eqn{H_{0}:  \nu^T \
 \eqn{H_{1}:  \nu^T \beta \neq 0} for suitably chosen \eqn{\nu}.
 
 This function computes the following p-value:
-\deqn{P(|\nu^T Y \geq \nu^T y |  \hat{c}_1, \hat{c}_2 \in CC_K(Y),  \Pi_\nu^\perp Y  =  \Pi_\nu^\perp y)},
-where \eqn{CC_K(Y)} is the set of connected components estimated from Y via K steps of dual-path algorithm that
-solves the fused lasso objective, and \eqn{\Pi_\nu^\perp} is the orthogonal projection to the orthogonal complement of \eqn{\nu}.
-In particular, this p-value controls the selective Type I error and has higher power than an existing method
+\deqn{P(|\nu^T Y| \geq| \nu^T y| \; | \;  \hat{C}_1, \hat{C}_2 \in CC_K(Y),  \Pi_\nu^\perp Y  =  \Pi_\nu^\perp y)},
+where \eqn{CC_K(Y)} is the set of estimated connected components from applying K steps of the dual path algorithm on data Y
+, and \eqn{\Pi_\nu^\perp} is the orthogonal projection to the orthogonal complement of \eqn{\nu}.
+In particular, the test based on this p-value controls the selective Type I error and has higher power than an existing method
 by Hyun et al. (2018). Readers can refer to the Section 3 in Chen et al. (2021+) for more details.
 }
 \examples{
@@ -96,7 +96,7 @@ lev1 <- 0 # mean for group 1
 lev2 <- 3 # mean (absolute value) for group 2/3
 sigma <- 1 # level of noise
 nn <- 8 # grid size
-Dmat <- graph2D_Dmat(nn^2) # generate D matrix for the 2D fused lasso
+Dmat <- genlasso::getD2d(nn, nn) # generate D matrix for the 2D fused lasso
 ### Create the underlying signal
 A <- matrix(lev1, ncol=nn, nrow = nn)
 A[1:round(nn/3),1:round(nn/3)] <- 1*lev2
@@ -105,8 +105,16 @@ A[(nn-2):(nn),(nn-2):(nn)] <- -1*lev2
 lattice::levelplot(A)
 set.seed(2005)
 A.noisy <- A + rnorm(nn^2,mean=0,sd=sigma)
-y <- do.call(c,lapply(1:nrow(A.noisy),function(irow)A.noisy[irow,]))
-### Run a test for a difference in means between estimated clusters 1 and 2
+y <- c(t(A.noisy))
+Now use the fusedlasso function to obtain estimated connected components after K=13
+steps of the dual path algorithm
+K = 13
+complete_sol <- genlasso::fusedlasso(y=y,D=Dmat,maxsteps=K+1)
+beta_hat <- complete_sol$beta[,K+1]
+estimated connected components
+estimated_CC <- complete_sol$pathobjs$i
+estimated_CC
+### Run a test for a difference in means between estimated connected components 1 and 2
 result_demo <- fusedlasso_inf(y=y, D=Dmat, c1=1, c2=2, method="K", sigma=sigma, K=13)
 ### Check the graph fused lasso estimate
 beta_hat_K <- matrix(result_demo$beta_hat, nrow = nrow(A))

@@ -13,6 +13,8 @@
 ### Output:
 ### truncation_list: a list of intervals (each item in the form (vlo, vup))
 #' @export
+#' @keywords internal
+
 ComputeUnionIntervals_GFL <- function(y,
                                       Dmat,
                                       v,

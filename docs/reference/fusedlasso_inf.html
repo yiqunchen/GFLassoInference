@@ -134,7 +134,7 @@ function in the <code>genlasso</code> package.</p>
   <span class='va'>method</span>,
   <span class='va'>sigma</span>,
   K <span class='op'>=</span> <span class='cn'>NULL</span>,
-  c <span class='op'>=</span> <span class='cn'>NULL</span>,
+  L <span class='op'>=</span> <span class='cn'>NULL</span>,
   early_stop <span class='op'>=</span> <span class='cn'>NULL</span>,
   compute_ci <span class='op'>=</span> <span class='cn'>FALSE</span>,
   alpha_level <span class='op'>=</span> <span class='fl'>0.05</span>
@@ -145,16 +145,16 @@ function in the <code>genlasso</code> package.</p>
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>y</th>
-      <td><p>Numeric vector; \(p\) dimensional observed data</p></td>
+      <td><p>Numeric vector; \(n\) dimensional observed data</p></td>
     </tr>
     <tr>
       <th>D</th>
-      <td><p>Numeric matrix; \(m\) by \(p\) penalty matrix, i.e.,
+      <td><p>Numeric matrix; \(m\) by \(n\) penalty matrix, i.e.,
 the oriented incidence matrix over the underlying graph</p></td>
     </tr>
     <tr>
       <th>c1, c2</th>
-      <td><p>Integers selecting the two clusters to test, as indexed by the results of
+      <td><p>Integers selecting the two connected components to test, as indexed by the results of
 <code><a href='https://rdrr.io/pkg/genlasso/man/fusedlasso.html'>genlasso::fusedlasso</a></code>.</p></td>
     </tr>
     <tr>
@@ -171,7 +171,7 @@ the oriented incidence matrix over the underlying graph</p></td>
 It must be specified if method=="K".</p></td>
     </tr>
     <tr>
-      <th>c</th>
+      <th>L</th>
       <td><p>Integer; the targeted number of connected components.
 It must be specified if method=="CC".</p></td>
     </tr>
@@ -211,10 +211,10 @@ difference in means between the two estimated connected components, should be co
 the output after K steps dual-path algorithm; and conditioning set 2 is based on the
 output of the after the dual-path algorithm yields c connected components in the output.</p>
 <p>Input:</p>
-<p>Consider the generative model \(Y_t = \beta_t + \epsilon_t, \epsilon_t \sim N(0, \sigma^2)\), where
+<p>Consider the generative model \(Y_j = \beta_j + \epsilon_j, \epsilon_j \sim N(0, \sigma^2). j=1,...,n\), where
 the underlying signal \(\beta\) is assumed to be piecewise constant with respect to an underlying
 graph. The fused lasso estimate minimizes the following objective function
-$$minimize_{\beta} \frac{1}{2} \sum_{i=1}^{p} ( y_i - \beta_i )^2 + \lambda \sum_{(i,j)\in E}|\beta_i-\beta_j|,$$
+$$minimize_{\beta} \frac{1}{2} \sum_{j=1}^{n} ( y_j - \beta_j )^2 + \lambda \sum_{(i,j)\in E}|\beta_i-\beta_j|,$$
 where E is the edge set of the underlying graph. The solution \(\hat{\beta}\) can then be
 segment into connected components; that is, the set of \(\hat{\beta}\) that takes on the
 same value, and are connected in the original graph.</p>
@@ -222,10 +222,10 @@ same value, and are connected in the original graph.</p>
 are equal; or equivalently, the null hypothesis of the form \(H_{0}:  \nu^T \beta = 0\) versus
 \(H_{1}:  \nu^T \beta \neq 0\) for suitably chosen \(\nu\).</p>
 <p>This function computes the following p-value:
-$$P(|\nu^T Y \geq \nu^T y |  \hat{c}_1, \hat{c}_2 \in CC_K(Y),  \Pi_\nu^\perp Y  =  \Pi_\nu^\perp y)$$,
-where \(CC_K(Y)\) is the set of connected components estimated from Y via K steps of dual-path algorithm that
-solves the fused lasso objective, and \(\Pi_\nu^\perp\) is the orthogonal projection to the orthogonal complement of \(\nu\).
-In particular, this p-value controls the selective Type I error and has higher power than an existing method
+$$P(|\nu^T Y| \geq| \nu^T y| \; | \;  \hat{C}_1, \hat{C}_2 \in CC_K(Y),  \Pi_\nu^\perp Y  =  \Pi_\nu^\perp y)$$,
+where \(CC_K(Y)\) is the set of estimated connected components from applying K steps of the dual path algorithm on data Y
+, and \(\Pi_\nu^\perp\) is the orthogonal projection to the orthogonal complement of \(\nu\).
+In particular, the test based on this p-value controls the selective Type I error and has higher power than an existing method
 by Hyun et al. (2018). Readers can refer to the Section 3 in Chen et al. (2021+) for more details.</p>
     <h2 class="hasAnchor" id="references"><a class="anchor" href="#references"></a>References</h2>
 
@@ -233,26 +233,7 @@ by Hyun et al. (2018). Readers can refer to the Section 3 in Chen et al. (2021+)
 Hyun S, G’Sell M, Tibshirani RJ. (2018) Exact post-selection inference for the generalized lasso path. Electron J Stat.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='va'>lev1</span> <span class='op'>&lt;-</span> <span class='fl'>0</span> <span class='co'># mean for group 1</span>
-<span class='va'>lev2</span> <span class='op'>&lt;-</span> <span class='fl'>3</span> <span class='co'># mean (absolute value) for group 2/3</span>
-<span class='va'>sigma</span> <span class='op'>&lt;-</span> <span class='fl'>1</span> <span class='co'># level of noise</span>
-<span class='va'>nn</span> <span class='op'>&lt;-</span> <span class='fl'>8</span> <span class='co'># grid size</span>
-<span class='va'>Dmat</span> <span class='op'>&lt;-</span> <span class='fu'>graph2D_Dmat</span><span class='op'>(</span><span class='va'>nn</span><span class='op'>^</span><span class='fl'>2</span><span class='op'>)</span> <span class='co'># generate D matrix for the 2D fused lasso</span>
-<span class='co'>### Create the underlying signal</span>
-<span class='va'>A</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/matrix.html'>matrix</a></span><span class='op'>(</span><span class='va'>lev1</span>, ncol<span class='op'>=</span><span class='va'>nn</span>, nrow <span class='op'>=</span> <span class='va'>nn</span><span class='op'>)</span>
-<span class='va'>A</span><span class='op'>[</span><span class='fl'>1</span><span class='op'>:</span><span class='fu'><a href='https://rdrr.io/r/base/Round.html'>round</a></span><span class='op'>(</span><span class='va'>nn</span><span class='op'>/</span><span class='fl'>3</span><span class='op'>)</span>,<span class='fl'>1</span><span class='op'>:</span><span class='fu'><a href='https://rdrr.io/r/base/Round.html'>round</a></span><span class='op'>(</span><span class='va'>nn</span><span class='op'>/</span><span class='fl'>3</span><span class='op'>)</span><span class='op'>]</span> <span class='op'>&lt;-</span> <span class='fl'>1</span><span class='op'>*</span><span class='va'>lev2</span>
-<span class='va'>A</span><span class='op'>[</span><span class='op'>(</span><span class='va'>nn</span><span class='op'>-</span><span class='fl'>2</span><span class='op'>)</span><span class='op'>:</span><span class='op'>(</span><span class='va'>nn</span><span class='op'>)</span>,<span class='op'>(</span><span class='va'>nn</span><span class='op'>-</span><span class='fl'>2</span><span class='op'>)</span><span class='op'>:</span><span class='op'>(</span><span class='va'>nn</span><span class='op'>)</span><span class='op'>]</span> <span class='op'>&lt;-</span> <span class='op'>-</span><span class='fl'>1</span><span class='op'>*</span><span class='va'>lev2</span>
-<span class='co'>### Visualize the underlying signal</span>
-<span class='fu'>lattice</span><span class='fu'>::</span><span class='fu'><a href='https://rdrr.io/pkg/lattice/man/levelplot.html'>levelplot</a></span><span class='op'>(</span><span class='va'>A</span><span class='op'>)</span>
-</div><div class='img'><img src='fusedlasso_inf-1.png' alt='' width='700' height='433' /></div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/Random.html'>set.seed</a></span><span class='op'>(</span><span class='fl'>2005</span><span class='op'>)</span>
-<span class='va'>A.noisy</span> <span class='op'>&lt;-</span> <span class='va'>A</span> <span class='op'>+</span> <span class='fu'><a href='https://rdrr.io/r/stats/Normal.html'>rnorm</a></span><span class='op'>(</span><span class='va'>nn</span><span class='op'>^</span><span class='fl'>2</span>,mean<span class='op'>=</span><span class='fl'>0</span>,sd<span class='op'>=</span><span class='va'>sigma</span><span class='op'>)</span>
-<span class='va'>y</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/do.call.html'>do.call</a></span><span class='op'>(</span><span class='va'>c</span>,<span class='fu'><a href='https://rdrr.io/r/base/lapply.html'>lapply</a></span><span class='op'>(</span><span class='fl'>1</span><span class='op'>:</span><span class='fu'><a href='https://rdrr.io/r/base/nrow.html'>nrow</a></span><span class='op'>(</span><span class='va'>A.noisy</span><span class='op'>)</span>,<span class='kw'>function</span><span class='op'>(</span><span class='va'>irow</span><span class='op'>)</span><span class='va'>A.noisy</span><span class='op'>[</span><span class='va'>irow</span>,<span class='op'>]</span><span class='op'>)</span><span class='op'>)</span>
-<span class='co'>### Run a test for a difference in means between estimated clusters 1 and 2</span>
-<span class='va'>result_demo</span> <span class='op'>&lt;-</span> <span class='fu'>fusedlasso_inf</span><span class='op'>(</span>y<span class='op'>=</span><span class='va'>y</span>, D<span class='op'>=</span><span class='va'>Dmat</span>, c1<span class='op'>=</span><span class='fl'>1</span>, c2<span class='op'>=</span><span class='fl'>2</span>, method<span class='op'>=</span><span class='st'>"K"</span>, sigma<span class='op'>=</span><span class='va'>sigma</span>, K<span class='op'>=</span><span class='fl'>13</span><span class='op'>)</span>
-<span class='co'>### Check the graph fused lasso estimate</span>
-<span class='va'>beta_hat_K</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/matrix.html'>matrix</a></span><span class='op'>(</span><span class='va'>result_demo</span><span class='op'>$</span><span class='va'>beta_hat</span>, nrow <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/nrow.html'>nrow</a></span><span class='op'>(</span><span class='va'>A</span><span class='op'>)</span><span class='op'>)</span>
-<span class='fu'>lattice</span><span class='fu'>::</span><span class='fu'><a href='https://rdrr.io/pkg/lattice/man/levelplot.html'>levelplot</a></span><span class='op'>(</span><span class='va'>beta_hat_K</span><span class='op'>)</span>
-</div><div class='img'><img src='fusedlasso_inf-2.png' alt='' width='700' height='433' /></div></pre>
+    <pre class="examples"></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

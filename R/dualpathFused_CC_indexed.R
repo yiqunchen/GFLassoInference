@@ -11,6 +11,7 @@
 
 ### modified to compute post selection events
 # input contrast vector v
+#' @keywords internal
 #' @export
 dualpathFused_CC_indexed <- function(y, D, v, sigma, K_CC = NULL, K_lambda = NULL,
                                      approx=FALSE, maxsteps=200, minlam=0,
