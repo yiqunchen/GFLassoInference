@@ -77,24 +77,21 @@
 #' set.seed(2005)
 #' A.noisy <- A + rnorm(nn^2,mean=0,sd=sigma)
 #' y <- c(t(A.noisy))
-#' Now use the fusedlasso function to obtain estimated connected components after K=13
-#' steps of the dual path algorithm
+#' ### Now use the fusedlasso function to obtain estimated connected components after K=13
+#' ### steps of the dual path algorithm
 #' K = 13
 #' complete_sol <- genlasso::fusedlasso(y=y,D=Dmat,maxsteps=K+1)
 #' beta_hat <- complete_sol$beta[,K+1]
-#' estimated connected components
+#' ### estimated connected components
 #' estimated_CC <- complete_sol$pathobjs$i
 #' estimated_CC
 #' ### Run a test for a difference in means between estimated connected components 1 and 2
 #' result_demo <- fusedlasso_inf(y=y, D=Dmat, c1=1, c2=2, method="K", sigma=sigma, K=13)
-#' ### Check the graph fused lasso estimate
-#' beta_hat_K <- matrix(result_demo$beta_hat, nrow = nrow(A))
-#' lattice::levelplot(beta_hat_K)
-
+#' summary(result_demo)
+#'
 #' @references
 #' Chen YT, Jewell SW, Witten DM. (2021+) More powerful selective inference for the graph fused lasso
 #' Hyun S, G’Sell M, Tibshirani RJ. (2018) Exact post-selection inference for the generalized lasso path. Electron J Stat.
-
 
 fusedlasso_inf <- function(y, D, c1, c2, method, sigma, K=NULL, L=NULL, early_stop=NULL,
                            compute_ci = FALSE, alpha_level = 0.05){
