@@ -50,9 +50,9 @@ $$  H_0: {\sum_{j \in \hat{C}_1} \beta_j  }/{|\hat{C}_1|  }  =
  { \sum_{j' \in \hat{C}_2} \beta_{j'} }/{   |\hat{C}_2|} \mbox{ versus }  H_1: {\sum_{j \in \hat{C}_1} \beta_j  }/{|\hat{C}_1|  }  \neq
  { \sum_{j' \in \hat{C}_2} \beta_{j'} }/{   |\hat{C}_2|},
 $$
-where $\hat{C}_1\subseteq V$ and $\hat{C}_2\subseteq V$ are two connected components of $\hat\beta$, with cardinality $|\hat{C}_1|$ and $|\hat{C}_2|$. This is equivalent to testing 
+where $\hat{C}_1\subseteq V$ and $\hat{C}_2\subseteq V$ are two connected components of $\hat\beta$, with cardinalities $|\hat{C}_1|$ and $|\hat{C}_2|$. This is equivalent to testing 
   $H_0: \nu^\top \beta = 0$ versus $H_1: \nu^\top \beta \neq 0$, where  $\nu \in \mathbb{R}^n$ is defined as 
-$$  \nu_{j} =  1_{( i \in \hat{C}_1)} / |\hat{C}_1| -  1_{( j \in \hat{C}_2)}/|\hat{C}_2|\quad j = 1,\ldots,n.$$
+$$  \nu_{j} =  1_{( j \in \hat{C}_1)} / |\hat{C}_1| -  1_{( j \in \hat{C}_2)}/|\hat{C}_2|\quad j = 1,\ldots,n.$$
 
 This results in a challenging problem because we need to account for the process that led us to test this very hypothesis! Drawing from the selective inference literature, Hyun et al. (2018) tackled this problem by proposing the following $p$-value: 
  $$p_{\text{Hyun}} = \mathbb{P}_{H_0}\left(|\nu^{\top} Y |\geq |\nu^{\top} y| \;\middle |\; \bigcap_{k=1}^K \left\{ M_k(Y) = M_k(y) \right\}, \Pi_{\nu}^{\perp} Y= \Pi_{\nu}^{\perp} y\right),$$
