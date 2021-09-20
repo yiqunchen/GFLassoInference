@@ -97,8 +97,8 @@ ggplot(A_noisy_value_plot, aes(Var1, Var2, fill = z)) +
 In the code below, we use the `fusedlasso` function (see [link](https://rdrr.io/cran/genlasso/man/fusedlasso.html) for the detailed documentations for the `fusedlasso` function) in the `genlasso` package to obtain the graph fused lasso estimator $\hat\beta$ on data `y`. In this example, we apply the dual path algorithm on `y` with $K=13$, which yields three estimated connected components. 
 ```{r fig.align="center",  fig.height = 5, fig.width = 4, warning = FALSE}
 K = 13
-complete_sol <- genlasso::fusedlasso(y=y,D=Dmat,maxsteps=K+1)
-beta_hat <- complete_sol$beta[,K+1]
+complete_sol <- genlasso::fusedlasso(y=y,D=Dmat,maxsteps=K)
+beta_hat <- complete_sol$beta[,K]
 #  estimated connected components
 estimated_CC <- complete_sol$pathobjs$i
 estimated_CC

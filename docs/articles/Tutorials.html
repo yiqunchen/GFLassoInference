@@ -154,8 +154,8 @@
 <p>In the code below, we use the <code>fusedlasso</code> function (see <a href="https://rdrr.io/cran/genlasso/man/fusedlasso.html">link</a> for the detailed documentations for the <code>fusedlasso</code> function) in the <code>genlasso</code> package to obtain the graph fused lasso estimator <span class="math inline">\(\hat\beta\)</span> on data <code>y</code>. In this example, we apply the dual path algorithm on <code>y</code> with <span class="math inline">\(K=13\)</span>, which yields three estimated connected components.</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">K</span> <span class="op">=</span> <span class="fl">13</span>
-<span class="va">complete_sol</span> <span class="op">&lt;-</span> <span class="fu">genlasso</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/genlasso/man/fusedlasso.html">fusedlasso</a></span><span class="op">(</span>y<span class="op">=</span><span class="va">y</span>,D<span class="op">=</span><span class="va">Dmat</span>,maxsteps<span class="op">=</span><span class="va">K</span><span class="op">+</span><span class="fl">1</span><span class="op">)</span>
-<span class="va">beta_hat</span> <span class="op">&lt;-</span> <span class="va">complete_sol</span><span class="op">$</span><span class="va">beta</span><span class="op">[</span>,<span class="va">K</span><span class="op">+</span><span class="fl">1</span><span class="op">]</span>
+<span class="va">complete_sol</span> <span class="op">&lt;-</span> <span class="fu">genlasso</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/genlasso/man/fusedlasso.html">fusedlasso</a></span><span class="op">(</span>y<span class="op">=</span><span class="va">y</span>,D<span class="op">=</span><span class="va">Dmat</span>,maxsteps<span class="op">=</span><span class="va">K</span><span class="op">)</span>
+<span class="va">beta_hat</span> <span class="op">&lt;-</span> <span class="va">complete_sol</span><span class="op">$</span><span class="va">beta</span><span class="op">[</span>,<span class="va">K</span><span class="op">]</span>
 <span class="co">#  estimated connected components</span>
 <span class="va">estimated_CC</span> <span class="op">&lt;-</span> <span class="va">complete_sol</span><span class="op">$</span><span class="va">pathobjs</span><span class="op">$</span><span class="va">i</span>
 <span class="va">estimated_CC</span>
@@ -218,7 +218,7 @@ compute_ci <span class="op">=</span> <span class="cn">TRUE</span>, alpha_level <
 
 
       <footer><div class="copyright">
-  <p>Developed by Yiqun Chen.</p>
+  <p>Developed by Yiqun T. Chen.</p>
 </div>
 
 <div class="pkgdown">

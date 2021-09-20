@@ -1,4 +1,4 @@
-# ----- main function to test the means of estimated connected components -----
+# ----- main function to test equality of the means of two estimated connected components -----
 
 #' More powerful test for  the graph fused lasso
 #'
@@ -80,13 +80,13 @@
 #' ### Now use the fusedlasso function to obtain estimated connected components after K=13
 #' ### steps of the dual path algorithm
 #' K = 13
-#' complete_sol <- genlasso::fusedlasso(y=y,D=Dmat,maxsteps=K+1)
-#' beta_hat <- complete_sol$beta[,K+1]
+#' complete_sol <- genlasso::fusedlasso(y=y,D=Dmat,maxsteps=K)
+#' beta_hat <- complete_sol$beta[,K]
 #' ### estimated connected components
 #' estimated_CC <- complete_sol$pathobjs$i
 #' estimated_CC
 #' ### Run a test for a difference in means between estimated connected components 1 and 2
-#' result_demo <- fusedlasso_inf(y=y, D=Dmat, c1=1, c2=2, method="K", sigma=sigma, K=13)
+#' result_demo <- fusedlasso_inf(y=y, D=Dmat, c1=1, c2=2, method="K", sigma=sigma, K=K)
 #' summary(result_demo)
 #'
 #' @references
