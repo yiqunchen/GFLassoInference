@@ -48,7 +48,7 @@ difference in means between the two estimated connected components, should be co
 \value{
 Returns a list with elements:
 \itemize{
-\item \code{Union} the p-value proposed in Chen et al. (2021+)
+\item \code{pval} the p-value in Chen et al. (2021+)
 \item \code{truncation_set} the conditioning set of Chen et al. (2021+) stored as \code{Intervals} class
 \item \code{test_stats} test statistics: the difference in means of two connected components
 \item \code{beta_hat} Graph fused lasso estimates

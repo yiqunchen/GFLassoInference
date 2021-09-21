@@ -30,7 +30,7 @@
 #' @param alpha_level Numeric; parameter for the 1-\code{alpha_level} confidence interval, defeault to 0.05
 #' @return Returns a list with elements:
 #' \itemize{
-#' \item \code{Union} the p-value proposed in Chen et al. (2021+)
+#' \item \code{pval} the p-value in Chen et al. (2021+)
 #' \item \code{truncation_set} the conditioning set of Chen et al. (2021+) stored as \code{Intervals} class
 #' \item \code{test_stats} test statistics: the difference in means of two connected components
 #' \item \code{beta_hat} Graph fused lasso estimates
@@ -142,7 +142,6 @@ fusedlasso_inf <- function(y, D, c1, c2, method, sigma, K=NULL, L=NULL, early_st
                             segment_list = segment_list)
 
 
-
   names(search_result) <- c('Naive',
                             'Hyun',
                             'Union',
@@ -152,6 +151,7 @@ fusedlasso_inf <- function(y, D, c1, c2, method, sigma, K=NULL, L=NULL, early_st
                             'sd',
                             'hyun_set',
                             "two_sided")
+  search_result$pval <- search_result$Union
 
   K_beta_hat <- ncol(fused_lasso_sol$beta)+1
 
