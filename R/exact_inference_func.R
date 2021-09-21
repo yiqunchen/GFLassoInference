@@ -56,7 +56,7 @@
 #' \eqn{H_{1}:  \nu^T \beta \neq 0} for suitably chosen \eqn{\nu}.
 #'
 #' This function computes the following p-value:
-#' \deqn{P(|\nu^T Y| \geq |\nu^T y| \; | \;  \hat{C}_1, \hat{C}_2 \in CC_K(Y),  \Pi_\nu^\perp Y  =  \Pi_\nu^\perp y)},
+#' \deqn{P(|\nu^T Y| \ge |\nu^T y| \; | \;  \hat{C}_1, \hat{C}_2 \in CC_K(Y),  \Pi_\nu^\perp Y  =  \Pi_\nu^\perp y),}
 #' where \eqn{CC_K(Y)} is the set of estimated connected components from applying K steps of the dual path algorithm on data Y
 #' , and \eqn{\Pi_\nu^\perp} is the orthogonal projection to the orthogonal complement of \eqn{\nu}.
 #' In particular, the test based on this p-value controls the selective Type I error and has higher power than an existing method
