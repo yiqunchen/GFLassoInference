@@ -1,10 +1,10 @@
 \name{GFLassoInference}
 \alias{GFLassoInference}
 \docType{package}
-\title{Quantifying uncertainty for spikes estimated from calcium imaging data}
+\title{More powerful test for the graph fused lasso}
 
 \description{
-GFLassoInference is an R packagefor testing for a difference in means between a pair of connected components estimated from the graph fused lasso. Details can be found in our manuscript (Chen et al. 2021+). In addition to the manual in R, a detailed tutorial can be found at https://yiqunchen.github.io/GFLassoInference/.}
+GFLassoInference is an R package for testing a difference in means between a pair of connected components estimated from the graph fused lasso. Details can be found in our manuscript (Chen et al. 2021+). In addition to the manual in R, a detailed tutorial can be found at https://yiqunchen.github.io/GFLassoInference/.}
 
 \details{
 Maintainer: Yiqun T. Chen <yiqunc@uw.edu>
