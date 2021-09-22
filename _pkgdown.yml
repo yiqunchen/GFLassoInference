@@ -1,8 +1,7 @@
 # Navigation bar
-
 navbar:
   structure:
-    left:  [home, articles, tutorials, reference] #example
+    left:  [home, articles, tutorials, reference]
     right: [github]
 
   components:
@@ -13,7 +12,3 @@ navbar:
     tutorials:
       text: Software tutorials
       href: articles/Tutorials.html
-#
-#     example:
-#       text: Real data example
-#       href: articles/real_data_example.html

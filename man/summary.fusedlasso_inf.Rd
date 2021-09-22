@@ -4,7 +4,7 @@
 \alias{summary.fusedlasso_inf}
 \title{Summarize the  result for powerful graph fused lasso inference}
 \usage{
-summary.fusedlasso_inf(object, ...)
+\method{summary}{fusedlasso_inf}(object, ...)
 }
 \arguments{
 \item{object}{output from running spike_estimates}
