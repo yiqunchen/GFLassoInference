@@ -72,6 +72,7 @@ output of the after the dual-path algorithm yields c connected components in the
 
 Input:
 
+
 Consider the generative model \eqn{Y_j = \beta_j + \epsilon_j, \epsilon_j \sim N(0, \sigma^2). j=1,...,n}, where
 the underlying signal \eqn{\beta} is assumed to be piecewise constant with respect to an underlying
 graph. The fused lasso estimate minimizes the following objective function

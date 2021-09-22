@@ -11,7 +11,6 @@ Depends: R (>= 3.5)
 Imports: Matrix, igraph, sparsesvd, MASS, Rmpfr, genlasso, intervals
 Encoding: UTF-8
 LazyData: true
-Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.1.1
 Suggests: 
     rmarkdown,

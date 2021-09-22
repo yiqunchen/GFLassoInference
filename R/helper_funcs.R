@@ -30,7 +30,6 @@ sparse_svdsolve <- function(A,b, rtol=1e-7) {
 #' @examples
 #' n <- 10
 #' D_1d <- dual1d_Dmat(n)
-#' @export
 dual1d_Dmat = function(m){
   D = matrix(0, nrow = m-1, ncol = m)
   for(ii in 1:(m-1)){
@@ -43,7 +42,6 @@ dual1d_Dmat = function(m){
 
 # Makes a D matrix for a matrix that is stacked as rows
 #' @keywords internal
-#' @export
 graph2D_Dmat = function(m){
 
   m0 = sqrt(m)

@@ -11,11 +11,9 @@ check_segment_in_model; util function
 }
 \details{
 This model takes in
-\enumerate{
-\item new_cluster new cluster assignment
-\item old_segment a list segment (represented by the positions of the nodes),
+1. new_cluster new cluster assignment
+2. old_segment a list segment (represented by the positions of the nodes),
 and checks if the list of segments of interest is in the new graph
 (assume same ordering of nodes)
-}
 }
 \keyword{internal}

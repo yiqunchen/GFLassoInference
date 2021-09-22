@@ -1,7 +1,9 @@
 #' Summarize the  result for powerful graph fused lasso inference
+#' @rdname summary.fusedlasso_inf
 #' @param object output from running spike_estimates
 #' @param  ... to be passed to methods
 #' @return A data frame with summarized results
+#' @export
 #' @examples
 #' lev1 <- 0 # mean for group 1
 #' lev2 <- 3 # mean (absolute value) for group 2/3
@@ -29,7 +31,7 @@
 #' result_demo <- fusedlasso_inf(y=y, D=Dmat, c1=1, c2=2, method="K",
 #' sigma=sigma, K=K, compute_ci=TRUE)
 #' summary(result_demo)
-#' @export
+#'
 summary.fusedlasso_inf <- function(object, ...){
   result <- data.frame(CC_1 = object$c1,
                        CC_2 = object$c2,
@@ -40,3 +42,5 @@ summary.fusedlasso_inf <- function(object, ...){
                        UCB = ifelse(is.null(object$CI_result[2]),NA,object$CI_result[2]))
   return(result)
 }
+
+

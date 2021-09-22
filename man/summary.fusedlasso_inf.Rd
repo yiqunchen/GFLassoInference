@@ -44,4 +44,5 @@ estimated_CC
 result_demo <- fusedlasso_inf(y=y, D=Dmat, c1=1, c2=2, method="K",
 sigma=sigma, K=K, compute_ci=TRUE)
 summary(result_demo)
+
 }

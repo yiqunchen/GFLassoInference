@@ -1,33 +1,3 @@
-##' Polyhedron post-selection inference selection with faster
-##' computation of svd
-##'
-##' Adapted from https://github.com/sangwon-hyun/genlassoinf/blob/master/code/dualPathSvd2.R,
-##' modified to compute the polyhedron post-selection inference selection with faster
-##' computation of svd, and fixed a few bugs in the previous function (as of feb/5/2021).
-##' This code first compute a solution path of the generalized lasso dual problem:
-##'
-##' hat{u}(lambda) =argmin_u |y - D^T u|_2^2 rm{s.t.} |u|_infty leq lambda
-##'
-##'
-##' where D is m x n. Here there is no assumption on D, and we use a
-##' fresh SVD at each iteration (computationally naive but stable).
-##'
-##' Note: the df estimates at each lambda_k can be thought of as the df for all
-##' solutions corresponding to lambda in (lambda_k,lambda_{k-1}), the open
-##' interval to the *right* of the current lambda_k.
-#' @param y numeric vector of data.
-#' @param D penalty matrix.
-#' @param approx If approx=TRUE, then the fused lasso path will be computed
-#'     without any coordinates leaving the path.
-#' @param maxsteps maximum number of steps of the algorithms to run.
-#' @param minlam minimum lambda of the algorithms to run
-#' @param rtol Tolerance for solving linear system using sparsesvdsolve(), defaults to 1e-7.
-#' @param ctol Tolerance for gmat&%y ~= c; defaults to 1e-7
-#' @param btol Tolerance for leaving times, precision issue, defaults to 1e-10
-#' @param cdtol Tolerance for cdtol; defaults to 1e-4
-#' @param do.gc internal garbage collection code
-#' @export
-#' @keywords internal
 dualpathSvd2_YC <- function(y, D, v, sigma = 1, approx=FALSE, maxsteps=2000, minlam=0,
                             rtol=1e-7, btol=1e-7, verbose=FALSE, object=NULL,
                             ctol=1e-10, cdtol=1e-4, do.gc=F){
