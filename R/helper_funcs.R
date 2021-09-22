@@ -161,15 +161,14 @@ Seq = function(a,b,by) {
   else return(integer(0))
 }
 
+#' check_segment_in_model; util function
 #' @keywords internal
 #' @details
 #' This model takes in
-#' 1. @new_cluster new cluster assignment
-#' 2. @old_segment a list segment (represented by the positions of the nodes),
+#' 1. new_cluster new cluster assignment
+#' 2. old_segment a list segment (represented by the positions of the nodes),
 #' and checks if the list of segments of interest is in the new graph
 #' (assume same ordering of nodes)
-#' @export
-#'
 check_segment_in_model <- function(old_segment, new_cluster){
 
   old_segment_length <- length(old_segment)
@@ -191,8 +190,6 @@ check_segment_in_model <- function(old_segment, new_cluster){
   return(TRUE)
 }
 
-
-#' @export
 getadjmat.from.Dmat = function(Dmat){
 
   Dmat = rbind(Dmat)

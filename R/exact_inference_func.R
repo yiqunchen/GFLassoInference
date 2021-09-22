@@ -91,9 +91,10 @@
 #'
 #' @references
 #' Chen YT, Jewell SW, Witten DM. (2021+) More powerful selective inference for the graph fused lasso
+#'
 #' Hyun S, G’Sell M, Tibshirani RJ. (2018) Exact post-selection inference for the generalized lasso path. Electron J Stat.
 
-fusedlasso_inf <- function(y, D, c1, c2, method, sigma, K=NULL, L=NULL, early_stop=NULL,
+fusedlasso_inf <- structure(function(y, D, c1, c2, method, sigma, K=NULL, L=NULL, early_stop=NULL,
                            compute_ci = FALSE, alpha_level = 0.05){
 
   if(!method%in%c("K","CC")){stop("Method must be 'K' or 'CC'.")}
@@ -174,7 +175,6 @@ fusedlasso_inf <- function(y, D, c1, c2, method, sigma, K=NULL, L=NULL, early_st
     CI_result <- NULL
   }
 
-
   return_result <- c(search_result, list(connected_comp = fused_lasso_mem,
                                          CI_result = CI_result,
                                          c1 = c1,
@@ -186,7 +186,7 @@ fusedlasso_inf <- function(y, D, c1, c2, method, sigma, K=NULL, L=NULL, early_st
   class(return_result) <- "fusedlasso_inf"
   return(return_result)
 
-  }
+  })
 
 
 
