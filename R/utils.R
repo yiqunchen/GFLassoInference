@@ -1,5 +1,5 @@
 #' Summarize the  result for powerful graph fused lasso inference
-#' @rdname summary.fusedlasso_inf
+#' @rdname fusedlasso_inf
 #' @param object output from running spike_estimates
 #' @param  ... to be passed to methods
 #' @return A data frame with summarized results

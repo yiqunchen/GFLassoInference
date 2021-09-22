@@ -1,7 +1,7 @@
 \name{GFLassoInference}
 \alias{GFLassoInference}
 \docType{package}
-\title{More powerful test for the graph fused lasso}
+\title{Package GFLassoInference: powerful inference for the graph fused lasso}
 
 \description{
 GFLassoInference is an R package for testing a difference in means between a pair of connected components estimated from the graph fused lasso. Details can be found in our manuscript (Chen et al. 2021+). In addition to the manual in R, a detailed tutorial can be found at https://yiqunchen.github.io/GFLassoInference/.}
