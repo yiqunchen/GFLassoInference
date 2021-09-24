@@ -36,7 +36,7 @@ As an example, consider the graph fused lasso on a grid graph, constructed by co
 
 If you use `GFLassoInference` for your analysis, please cite our manuscript:
 
-Chen YT, Jewell SW, Witten DM. (2021+) More powerful selective inference for the graph fused lasso.
+Chen YT, Jewell SW, Witten DM. (2021+) More powerful selective inference for the graph fused lasso. arXiv preprint. https://arxiv.org/abs/2109.10451.
 
 ### Bug Reports / Change Requests
 
@@ -44,7 +44,7 @@ If you encounter a bug or would like to make a change request, please file it as
 
 ### References
 
-Chen YT, Jewell SW, Witten DM. (2021+) More powerful selective inference for the graph fused lasso
+Chen YT, Jewell SW, Witten DM. (2021+) More powerful selective inference for the graph fused lasso. arXiv preprint. https://arxiv.org/abs/2109.10451.
 
 Fithian W, Sun D, Taylor J. (2014) Optimal Inference After Model Selection. arXiv:1410.2597 [mathST]. 
 

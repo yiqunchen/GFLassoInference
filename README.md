@@ -20,15 +20,15 @@ Visit https://yiqunchen.github.io/GFLassoInference/ for tutorials and examples. 
 
 If you use `GFLassoInference` for your analysis, please cite our manuscript:
 
-Chen YT, Jewell SW, Witten DM. (2021+) More powerful selective inference for the graph fused lasso.
-
+Chen YT, Jewell SW, Witten DM. (2021+) More powerful selective inference for the graph fused lasso. arXiv preprint. https://arxiv.org/abs/2109.10451.
+ 
 ### Bug Reports / Change Requests
 
 If you encounter a bug or would like to make a change request, please file it as an issue [here](https://github.com/yiqunchen/GFLassoInference/issues).
 
 ### References
 
-Chen YT, Jewell SW, Witten DM. (2021+) More powerful selective inference for the graph fused lasso
+Chen YT, Jewell SW, Witten DM. (2021+) More powerful selective inference for the graph fused lasso. arXiv preprint. https://arxiv.org/abs/2109.10451.
 
 Hyun S, G’Sell M, Tibshirani RJ. (2018) Exact post-selection inference for the generalized lasso path. Electron J Stat.
 
