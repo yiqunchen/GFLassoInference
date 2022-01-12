@@ -117,7 +117,7 @@ ComputeUnionIntervals_GFL <- function(y,
   # 3. take the union - up to machine epsilon accuracy
   pos_intervals_union <- intervals::interval_union(intervals::expand(pos_intervals,
                                                                      intervals_delta,
-                                                                     type="relative"))
+                                                                     type="absolute"))
   # 4. do the same for the negative direction
   neg_dir_union <- line_search_results[[4]][which(line_search_results[[3]])]
   neg_dir_union <- lapply(neg_dir_union,function(x)c(min(x),max(x))) # numerical stability for intervals
@@ -127,7 +127,7 @@ ComputeUnionIntervals_GFL <- function(y,
   # 3. take the union - up to machine epsilon accuracy
   neg_intervals_union <- intervals::interval_union(intervals::expand(neg_intervals,
                                                                      intervals_delta,
-                                                                     type="relative"))
+                                                                     type="absolute"))
 
   truncation_set <- intervals::interval_union(pos_intervals_union,
                                               neg_intervals_union)

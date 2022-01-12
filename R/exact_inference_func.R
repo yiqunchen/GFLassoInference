@@ -99,7 +99,7 @@ fusedlasso_inf <- structure(function(y, D, c1, c2, method, sigma, K=NULL, L=NULL
 
   if(!method%in%c("K","CC")){stop("Method must be 'K' or 'CC'.")}
   if((method=="K")&is.null(K)){stop("Must specify K, the steps of the dual-path algorithm.")}
-  if((method=="CC")&is.null(c)){stop("Must specify c, the number of connected components.")}
+  if((method=="CC")&is.null(L)){stop("Must specify c, the number of connected components.")}
   if(sigma<=0){stop("Positive sigma required!")}
   # verify the dimension of y and D
   if(dim(D)[2]!=length(y)){stop("ncol(D)!=length(y), check your input!")}
