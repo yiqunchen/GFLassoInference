@@ -256,11 +256,12 @@ GetUnionIntervals_GFL <- function(y, v, eta,
     ## abs don't matter
     while((temp_seg[[1]]$vlo-pos_dir_union[[pos_counter]][2])>=end_tolerance){
       eta_increase <- eta_increase*t
-      if(eta_increase<=1e-5){
-        #cat('current phi', phi,'\n')
+      if(eta_increase<=1e-6){
+        cat('current phi', phi,'\n')
         #print('eta too small, not gonna work,\n')
         break
       }
+
       phi <- pos_upper_limit+eta_increase
       temp_seg <- check_segment_GFL(y, v, phi = phi,
                                     Dmat, K, sigma,
@@ -303,7 +304,7 @@ GetUnionIntervals_GFL <- function(y, v, eta,
     # index 1 is vlo and 2 is vup TODO: named list
     while(abs(temp_seg[[1]]$vup-neg_dir_union[[neg_counter]][1])>=end_tolerance){
       eta_increase <- eta_increase*t
-      if(eta_increase<=1e-5){
+      if(eta_increase<=1e-6){
         #cat('current phi', phi,'\n')
         #print('eta too small, not gonna work,\n')
         break

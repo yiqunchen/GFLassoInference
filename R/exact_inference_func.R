@@ -104,6 +104,7 @@ fusedlasso_inf <- structure(function(y, D, c1, c2, method, sigma, K=NULL, L=NULL
   # verify the dimension of y and D
   if(dim(D)[2]!=length(y)){stop("ncol(D)!=length(y), check your input!")}
 
+  if(is.null(K)&(!is.null(L))){K <- L*50}
   v <- rep(0, length(y))
   fused_lasso_sol <- dualpathFused_CC_indexed(
                                  y=y,
@@ -111,7 +112,7 @@ fusedlasso_inf <- structure(function(y, D, c1, c2, method, sigma, K=NULL, L=NULL
                                  v=rep(1,ncol(D)),
                                  sigma=sigma,
                                  verbose=FALSE,
-                                 maxsteps = K,
+                                 maxsteps = max(K,L*50),
                                  K_CC = L,
                                  stop_criteria = method)
 
