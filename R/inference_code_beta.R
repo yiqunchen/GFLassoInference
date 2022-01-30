@@ -160,6 +160,15 @@ ComputeUnionIntervals_GFL <- function(y,
   hyun_set <- intervals::Intervals(matrix(c(initail_line_seg$vlo,
                                    initail_line_seg$vup), ncol = 2))
 
+  hyun_set_df <- data.frame(hyun_set)
+  colnames(hyun_set_df) <- c("min_mean","max_mean")
+  hyun_set_df$contained <- 1
+
+  hyun_p_val <- calc_p_value_safer(hyun_set_df,
+                                   test_stats, sum(v*v),
+                                   sigma^2, mu = 0,
+                                   two_sided=two_sided)
+
   p_val_list <- list(naive_p_val,
                      hyun_p_val,
                      union_cond_p_val,
