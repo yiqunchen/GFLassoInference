@@ -333,8 +333,8 @@ GetUnionIntervals_GFL <- function(y, v, eta,
   if(!is.null(early_stop)){
     neg_dir_union[[neg_counter+1]] <- c(-Inf,neg_dir_union[[neg_counter]][[1]])
     pos_dir_union[[pos_counter+1]] <- c(pos_dir_union[[pos_counter]][[2]],Inf)
-    neg_dir_graph_cc[neg_counter+1] <- FALSE
-    pos_dir_graph_cc[pos_counter+1] <- FALSE
+    neg_dir_graph_cc[neg_counter+1] <- TRUE
+    pos_dir_graph_cc[pos_counter+1] <- TRUE
   }
   list_to_return <- list(pos_dir_graph_cc,pos_dir_union,neg_dir_graph_cc,neg_dir_union,pos_step_taken,neg_step_taken)
 
