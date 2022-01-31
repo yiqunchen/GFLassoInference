@@ -20,7 +20,7 @@ Visit https://yiqunchen.github.io/GFLassoInference/ for tutorials and examples. 
 
 If you use `GFLassoInference` for your analysis, please cite our manuscript:
 
-Chen YT, Jewell SW, Witten DM. (2021+) More powerful selective inference for the graph fused lasso. arXiv preprint. https://arxiv.org/abs/2109.10451.
+Chen YT, Jewell SW, Witten DM. (2022+) More powerful selective inference for the graph fused lasso. arXiv preprint. https://arxiv.org/abs/2109.10451.
  
 ### Bug Reports / Change Requests
 

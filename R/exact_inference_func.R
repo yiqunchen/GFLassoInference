@@ -90,7 +90,8 @@
 #' summary(result_demo)
 #'
 #' @references
-#' Chen YT, Jewell SW, Witten DM. (2021+) More powerful selective inference for the graph fused lasso
+#' Chen YT, Jewell SW, Witten DM. (2022+) More powerful selective inference for the graph fused lasso.
+#' arXiv preprint. https://arxiv.org/abs/2109.10451.
 #'
 #' Hyun S, G’Sell M, Tibshirani RJ. (2018) Exact post-selection inference for the generalized lasso path. Electron J Stat.
 
